@@ -41,8 +41,14 @@ INSTALLED_APPS = [
     'django.forms',
     'import_export',
     'django_bootstrap_breadcrumbs',
+    'axes',
     'account.apps.AccountConfig',   # account app
     'todolist.apps.TodolistConfig', # todolist app
+]
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesBackend', # required first
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware', # required last
 ]
 
 # setup session
@@ -89,6 +96,25 @@ BREADCRUMBS_TEMPLATE = 'django_bootstrap_breadcrumbs/bootstrap4.html'
 
 WSGI_APPLICATION = 'manager.wsgi.application'
 
+# ==========
+# setup Axes
+# ==========
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    'axes_cache': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+AXES_CACHE = 'axes'
+AXES_FAILURE_LIMIT = 11 # failed login counter
+AXES_COOLOFF_TIME = 12  # account lock time
+AXES_META_PRECEDENCE_ORDER = (
+    'HTTP_X_FORWARDED_FOR',
+    'REMOTE_ADDR',
+)
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -102,6 +128,9 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
             'charset': os.getenv('MYSQL_CHARSET'),
+        },
+        'TEST': {
+            'NAME': 'unit_test_database',  # setting database for unit test
         },
     }
 }

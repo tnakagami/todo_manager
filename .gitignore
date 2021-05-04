@@ -133,3 +133,4 @@ staticfiles/media/
 staticfiles/static/admin
 staticfiles/static/import_export
 migrations/
+for_django_test/result_test/

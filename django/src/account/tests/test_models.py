@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.core import mail
 from account.tests.factories import UserFactory, UserModel
 
 class BaseTestCase(TestCase):
@@ -9,7 +10,7 @@ class BaseTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        cls.user = UserFactor(email='alice@example.com', screen_name='_alice13')
+        cls.user = UserFactory(email='alice@example.com', screen_name='_alice13')
 
     @classmethod
     def tearDownClass(cls):

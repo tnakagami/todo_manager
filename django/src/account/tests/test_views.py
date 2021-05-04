@@ -1,4 +1,6 @@
 from django.test import TestCase
+from django.test.utils import override_settings
+from django.urls import reverse, resolve
 from django.contrib.auth.hashers import make_password
 from account.tests.factories import UserFactory, UserModel
 from account import views
@@ -13,7 +15,7 @@ class BaseTestCase(TestCase):
     def setUpTestData(cls):
         super().setUpTestData()
         cls.password = 'password'
-        cls.user = UserFactory(username='user@example.com', password=make_password(cls.password))
+        cls.user = UserFactory(email='user@example.com', password=make_password(cls.password))
 
     def chk_class(self, resolver, class_view):
         self.assertEqual(resolver.func.__name__, class_view.__name__)

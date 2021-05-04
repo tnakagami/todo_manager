@@ -37,24 +37,24 @@ while [ -n "$1" ]; do
             ;;
 
         test_build )
-            docker-compose build -f ${TEST_COMPOSE_FILE}
+            docker-compose -f ${TEST_COMPOSE_FILE} build
             # delete image of none
             docker images | grep '<none>' | awk '{print $3;}' | xargs -I{} docker rmi {}
             shift
             ;;
 
         test_start )
-            docker-compose up -d -f ${TEST_COMPOSE_FILE}
+            docker-compose -f ${TEST_COMPOSE_FILE} up -d
             shift
             ;;
 
         test_logs )
-            docker-compose logs test_django -f ${TEST_COMPOSE_FILE}
+            docker-compose -f ${TEST_COMPOSE_FILE} logs test_django
             shift
             ;;
 
         test_down )
-            docker-compose down -v -f ${TEST_COMPOSE_FILE}
+            docker-compose -f ${TEST_COMPOSE_FILE} down -v
             shift
             ;;
 

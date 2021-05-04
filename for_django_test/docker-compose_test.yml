@@ -17,19 +17,18 @@ services:
             DJANGO_SECRET_KEY: abcdefghijklmnopqrstuvwxyz0123456789
             DJANGO_SUPERUSER_EMAIL: superuser@django.local
             DJANGO_SUPERUSER_PASSWORD: superuserpassword
-            DJANGO_DEBUG_FLAG: True
+            DJANGO_DEBUG_FLAG: "True"
             DJANGO_WWW_VHOST: "*"
-            MYSQL_ROOT_PASSWORD: rootpassword
-            MYSQL_DATABASE: test_django_database
-            MYSQL_USER: test_user
-            MYSQL_PASSWORD: test_password
+            MYSQL_DATABASE: database
+            MYSQL_USER: root
+            MYSQL_PASSWORD: rootpassword
             MYSQL_CHARSET: utf8mb4
             MYSQL_COLLATION: utf8mb4_unicode_ci
             DB_HOST: test_mysql
         # Relationship config file to container directory
         volumes:
-            - ../staticfiles/media:/media
             - ../django/src:/code
+            - ./result_test:/result_test
         logging:
             driver: "json-file"
             options:
@@ -53,11 +52,9 @@ services:
         container_name: test_mysql
         restart: always
         # Setup environment variables
-        environment: 
+        environment:
             MYSQL_ROOT_PASSWORD: rootpassword
-            MYSQL_DATABASE: test_django_database
-            MYSQL_USER: test_user
-            MYSQL_PASSWORD: test_password
+            MYSQL_DATABASE: database
             MYSQL_CHARSET: utf8mb4
             MYSQL_COLLATION: utf8mb4_unicode_ci
         # Relationship config file to container directory
