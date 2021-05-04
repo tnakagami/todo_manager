@@ -1,0 +1,116 @@
+version: '3.4'
+
+services:
+    # Setup reverse proxy
+    nginx:
+        # Build target
+        build:
+            context: ./nginx
+            # Dockerfile
+            dockerfile: Dockerfile
+        # image name
+        image: custom_nginx
+        restart: always
+        # Container name
+        container_name: nginx
+        # Setup port
+        ports :
+            - "443:443"
+        env_file:
+            - env_file/nginx/.env
+        environment:
+            DEVELOP_MODE: "TRUE"
+        volumes:
+            - certs:/etc/letsencrypt
+            - ./staticfiles/static:/static:ro
+            - ./staticfiles/media:/media
+            - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params:ro
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./syslog-ng.conf:/etc/syslog-ng/conf.d/syslog-ng-extra.conf:ro
+            - ./nginx/default.template:/etc/nginx/template/default.template:ro
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3"
+        depends_on:
+            - django
+        networks:
+            - frontend_bridge
+
+    django:
+        # Build target
+        build:
+            context: ./django
+            # Dockerfile
+            dockerfile: Dockerfile
+        # Image name
+        image: custom_django
+        # Container name
+        container_name: django
+        restart: always
+        # Setup environment variables
+        env_file:
+            - env_file/django/.env # for django
+            - env_file/mysql/.env  # for mysql root information
+        environment:
+            DB_HOST: mysql
+        # Relationship config file to container directory
+        volumes:
+            - ./staticfiles/media:/media
+            - ./django/src:/code
+            - ./django/uwsgi.ini:/uwsgi.ini:ro
+            - ./syslog-ng.conf:/etc/syslog-ng/conf.d/syslog-ng-extra.conf:ro
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3"
+        depends_on:
+            - mysql
+        # Setup port
+        expose:
+            - "8081"
+        networks:
+            - frontend_bridge
+            - backend_bridge
+
+    # database
+    mysql:
+        # Build target
+        build:
+            context: ./mysql
+            # Dockerfile
+            dockerfile: Dockerfile
+        # Image name
+        image: custom_mysql.utf8mb4_jp
+        # Container name
+        container_name: mysql
+        restart: always
+        # Setup environment variables
+        env_file:
+            - env_file/mysql/.env # for mysql root information
+        # Relationship config file to container directory
+        volumes:
+            - database:/var/lib/mysql
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3"
+        # Setup port
+        expose:
+            - "3306"
+        networks:
+            - backend_bridge
+
+# Setup network
+networks:
+    frontend_bridge:
+        name: frontend_network
+    backend_bridge:
+        name: backend_network
+
+volumes:
+    database:
+    certs:
