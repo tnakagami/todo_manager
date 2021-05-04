@@ -1,6 +1,7 @@
 #!/bin/bash
 
 readonly CURRENT_DIR=$(cd $(dirname $0) && pwd)
+readonly TEST_COMPOSE_FILE=${CURRENT_DIR}/for_django_test/docker-compose_test.yml
 
 # ================
 # = main routine =
@@ -35,8 +36,31 @@ while [ -n "$1" ]; do
             shift
             ;;
 
+        test_build )
+            docker-compose build -f ${TEST_COMPOSE_FILE}
+            # delete image of none
+            docker images | grep '<none>' | awk '{print $3;}' | xargs -I{} docker rmi {}
+            shift
+            ;;
+
+        test_start )
+            docker-compose up -d -f ${TEST_COMPOSE_FILE}
+            shift
+            ;;
+
+        test_logs )
+            docker-compose logs test_django -f ${TEST_COMPOSE_FILE}
+            shift
+            ;;
+
+        test_down )
+            docker-compose down -v -f ${TEST_COMPOSE_FILE}
+            shift
+            ;;
+
         -h | --help | --usage )
-            echo "Usage: $0 [build|start|stop|restart|down|ps|logs]"
+            echo "Usage: [for exec] $0 [build|start|stop|restart|down|ps|logs]"
+            echo "       [for test] $0 [test_build|test_start|test_logs|test_down]"
             shift
             ;;
 
