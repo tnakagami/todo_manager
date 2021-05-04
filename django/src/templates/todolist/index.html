@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">タスク内容</th>
+                            <th>得点</th>
+                            <th>状態</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'todolist:detail_task' task.pk %}">{{ task.title }}</a>
+                            </td>
+                            <td>
+                                {{ task.point }}
+                            </td>
+                            <td>
+                                {% if task.is_done %}
+                                <button type="button" class="btn btn-primary btn-block task-modal-button" data-url="{% url 'todolist:update_task_status' task.pk %}" data-title="{{ task.title }}">終わった</button>
+                                {% else %}
+                                終わった
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="task-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">タスクの終了</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>「<span id="task-title"></span>」が終わったことを知らせる</p>
+                <form action="" method="POST" id="task-form">
+                    {% csrf_token %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" form="task-form">終わった</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">まだ</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bodyjs %}
+<script>
+(function() {
+    const taskForm = document.getElementById('task-form');
+    const taskModalButtons = document.getElementsByClassName('task-modal-button');
+
+    for (const button of taskModalButtons) {
+        button.addEventListener('click', () => {
+            taskForm.action = button.dataset.url;
+            $('#task-title').text(button.dataset.title);
+
+            $('#task-modal').modal({
+                backdrop: false,
+                keyboard: true,
+            });
+        });
+    }
+}());
+</script>
+{% endblock %}

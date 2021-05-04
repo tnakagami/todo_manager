@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="card col-12">
+        <article>
+            {% if user.is_staff or user.is_superuser or task.user.pk == user.pk %}
+            <section>
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="h1">{{ task.title }}</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <time datetime="{{ task.updated_at|date:'Y-m-d' }}">{{ task.updated_at|naturaltime }}に更新</time>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        {{ task.text | markdown2html }}
+                    </div>
+                </div>
+            </section>
+            {% else %}
+            <p>記事を表示する権限がありません。</p>
+            {% endif %}
+        </article>
+    </div>
+</div>
+{% endblock %}

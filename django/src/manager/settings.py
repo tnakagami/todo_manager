@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.forms',
     'import_export',
     'django_bootstrap_breadcrumbs',
-    'account.apps.AccountConfig', # account app
+    'account.apps.AccountConfig',   # account app
+    'todolist.apps.TodolistConfig', # todolist app
 ]
 
 MIDDLEWARE = [
