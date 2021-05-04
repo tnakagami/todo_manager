@@ -22,9 +22,7 @@ python manage.py migrate
 ここで、`DJANGO_SUPERUSER_EMAIL`, `DJANGO_SUPERUSER_PASSWORD`は、`env_file/django/.env`で定義される環境変数である。
 
 ```bash
-python manage.py custom_createsuperuser \
-                 --email ${DJANGO_SUPERUSER_EMAIL} \
-                 --password ${DJANGO_SUPERUSER_PASSWORD}
+python manage.py custom_createsuperuser --email ${DJANGO_SUPERUSER_EMAIL} --password ${DJANGO_SUPERUSER_PASSWORD}
 ```
 
 ## 多言語対応

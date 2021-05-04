@@ -87,7 +87,6 @@ BREADCRUMBS_TEMPLATE = 'django_bootstrap_breadcrumbs/bootstrap4.html'
 
 WSGI_APPLICATION = 'manager.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -156,3 +155,10 @@ MARKDOWN_EXTENSIONS = [
     'markdown.extensions.toc',
     'pymdownx.arithmatex',
 ]
+
+# define custom user model
+AUTH_USER_MODEL = 'account.User'
+
+# define login url and logout url
+LOGIN_URL = 'account:login'
+LOGIN_REDIRECT_URL = 'account:index'
