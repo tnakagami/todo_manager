@@ -1,5 +1,5 @@
-# Create .evn file
-An example follows:
+# .envファイルの生成
+.envファイルの設定例を以下に示す。
 
 ```bash
 MYDNSJP_MASTER_ID=masterid

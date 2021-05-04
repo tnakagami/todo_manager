@@ -1,5 +1,5 @@
-# Create .env file
-An example follows:
+# .envファイルの生成
+.envファイルの設定例を以下に示す。
 
 ```bash
 MYSQL_ROOT_PASSWORD=rootpassowrd
