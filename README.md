@@ -1,2 +1,1 @@
-# todo_manager
-ToDoリストの管理
+# ToDoリストの管理
