@@ -80,6 +80,13 @@
         </div>
     </div>
 </div>
+{% if tasks %}
+<div class="row justify-content-center">
+    <div class="col-12">
+{% include "pagination.html" %}
+    </div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block bodyjs %}
