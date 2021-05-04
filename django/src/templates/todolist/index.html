@@ -1,4 +1,5 @@
-{% extends "base.html" %}
+{% extends "todolist/breadcrumbs_todolist.html" %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-12">
@@ -7,14 +8,30 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                            {% if user.is_staff or user.is_superuser %}
+                            <th scope="col">ユーザ</th>
+                            <th>タスク内容</th>
+                            <th>得点</th>
+                            <th>状態</th>
+                            {% else %}
                             <th scope="col">タスク内容</th>
                             <th>得点</th>
                             <th>状態</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
                         {% for task in tasks %}
                         <tr>
+                            {% if user.is_staff or user.is_superuser %}
+                            <td>
+                                {% if task.user.screen_name %}
+                                {{ task.user.screen_name }}
+                                {% else %}
+                                {{ task.user.email }}
+                                {% endif %}
+                            </td>
+                            {% endif %}
                             <td>
                                 <a href="{% url 'todolist:detail_task' task.pk %}">{{ task.title }}</a>
                             </td>
@@ -22,11 +39,15 @@
                                 {{ task.point }}
                             </td>
                             <td>
+                            {% if user.is_staff or user.is_superuser %}
+                            <input type="checkbox" {% if task.is_done %}checked{% endif %} data-toggle="toggle" data-on="完了" data-off="未完了" data-onstyle="secondary" data-offstyle="primary" class="change-checkbox-trigger" onchange="change_toggle('{% url 'todolist:update_task_status' task.pk %}');">
+                            {% else %}
                                 {% if task.is_done %}
-                                <button type="button" class="btn btn-primary btn-block task-modal-button" data-url="{% url 'todolist:update_task_status' task.pk %}" data-title="{{ task.title }}">終わった</button>
-                                {% else %}
                                 終わった
+                                {% else %}
+                                <button type="button" class="btn btn-primary btn-block task-modal-button" data-url="{% url 'todolist:update_task_status' task.pk %}" data-title="{{ task.title }}">終わった</button>
                                 {% endif %}
+                            {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -73,11 +94,19 @@
             $('#task-title').text(button.dataset.title);
 
             $('#task-modal').modal({
-                backdrop: false,
+                backdrop: true,
                 keyboard: true,
             });
         });
     }
 }());
+{% if user.is_staff or user.is_superuser %}
+function change_toggle(url) {
+    const taskForm = document.getElementById('task-form');
+    taskForm.action = url;
+    taskForm.submit();
+}
+{% endif %}
+
 </script>
 {% endblock %}

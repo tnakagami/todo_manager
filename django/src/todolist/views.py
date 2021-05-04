@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
 from django.urls import reverse_lazy
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.views.generic import ListView, UpdateView, DetailView
 from . import models, forms
 
@@ -79,8 +79,8 @@ class UpdateTaskStatus(AccessMixin, UpdateView):
         return response
 
     def form_valid(self, form):
-        task = form.save(commit=False)
+        task = self.model.objects.get(pk=self.kwargs['pk'])
         task.is_done = not task.is_done
         task.save()
 
-        return super().form_valid(form)
+        return HttpResponseRedirect(self.get_success_url())
