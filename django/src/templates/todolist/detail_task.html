@@ -48,7 +48,7 @@ window.MathJax = {
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="card col-12">
+    <div class="col-12">
         <article>
             {% if user.is_staff or user.is_superuser or task.user.pk == user.pk %}
             <section>

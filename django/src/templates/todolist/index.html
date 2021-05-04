@@ -86,7 +86,7 @@
                                 {% if task.is_done %}
                                 <button type="button" class="btn btn-outline-secondary btn-block" disabled>終わった</button>
                                 {% else %}
-                                <button type="button" class="btn btn-outline-primary btn-block task-modal-button" data-url="{% url 'todolist:update_task_status' task.pk %}" data-title="{{ task.title }}">終わった</button>
+                                <button type="button" class="btn btn-primary btn-block task-modal-button" data-url="{% url 'todolist:update_task_status' task.pk %}" data-title="{{ task.title }}">終わった</button>
                                 {% endif %}
                             {% endif %}
                             </td>
