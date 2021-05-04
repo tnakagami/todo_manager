@@ -5,6 +5,47 @@
     <div class="col-12">
         <div class="row">
             <div class="col-12">
+                <h3 class="h3">集計結果</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            {% if user.is_staff or user.is_superuser %}
+                            <th scope="col">ユーザ</th>
+                            <th>達成度</th>
+                            <th>スコア</th>
+                            {% else %}
+                            <th scope="col">達成度</th>
+                            <th>スコア</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in aggregated %}
+                        <tr>
+                            {% if user.is_staff or user.is_superuser %}
+                            <td>
+                                {% if data.screen_name %}
+                                {{ data.screen_name }}
+                                {% else %}
+                                {{ data.email }}
+                                {% endif %}
+                            </td>
+                            {% endif %}
+                            <td>
+                                {{ data.finished }} / {{ data.total }}
+                            </td>
+                            <td>
+                                {{ data.score }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h3 class="h3 mt-1">内訳</h3>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -43,7 +84,7 @@
                             <input type="checkbox" {% if task.is_done %}checked{% endif %} data-toggle="toggle" data-on="完了" data-off="未完了" data-onstyle="secondary" data-offstyle="primary" class="change-checkbox-trigger" onchange="change_toggle('{% url 'todolist:update_task_status' task.pk %}');">
                             {% else %}
                                 {% if task.is_done %}
-                                終わった
+                                <button type="button" class="btn btn-outline-secondary btn-block" disabled>終わった</button>
                                 {% else %}
                                 <button type="button" class="btn btn-primary btn-block task-modal-button" data-url="{% url 'todolist:update_task_status' task.pk %}" data-title="{{ task.title }}">終わった</button>
                                 {% endif %}
@@ -114,6 +155,5 @@ function change_toggle(url) {
     taskForm.submit();
 }
 {% endif %}
-
 </script>
 {% endblock %}

@@ -33,3 +33,14 @@ django-admin.py makemessages -l ja
 # .po filesの変更
 django-admin.py compilemessages
 ```
+
+## 静的ファイルの取得
+以下のコマンドで静的ファイルを作成する。そして、作成したファイルをホストOS側にコピーする。
+```bash
+# コンテナ内で実行
+python manage.py collectstatic
+
+# コンテナ外で実行（ホストOS側で実行）
+docker cp django:/static/admin staticfiles/static
+docker cp django:/static/import_export staticfiles/static
+```
