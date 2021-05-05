@@ -1,4 +1,4 @@
-{% extends 'todolist/breadcrumbs_todolist_task_history.html' %}
+{% extends 'todolist/breadcrumbs_todolist_earned_point_history.html' %}
 {% load django_bootstrap_breadcrumbs %}
 
 {% block header %}
@@ -7,7 +7,7 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb task.title "todolist:detail_history" task.pk %}
+    {% breadcrumb task.title "todolist:detail_earned_point" task.pk %}
 {% endblock %}
 
 {% block content %}

@@ -11,7 +11,7 @@ class LoginForm(AuthenticationForm):
     Login form
     """
     # AuthenticationFormの内容に合わせ、username変数にログイン用のE-mailアドレスを設定する
-    username = forms.CharField(label=ugettext_lazy('e-mail address'))
+    username = forms.CharField(label=ugettext_lazy('email address'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

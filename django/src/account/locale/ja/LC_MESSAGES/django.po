@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-04 12:39+0900\n"
+"POT-Creation-Date: 2021-05-06 00:35+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,60 +17,77 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-#: account/admin.py:27
-msgid "Personal info"
-msgstr ""
 
-#: account/admin.py:28
+#: account/admin.py:32
+msgid "Personal info"
+msgstr "ユーザ情報"
+
+#: account/admin.py:33
 msgid "Permissions"
 msgstr "権限"
 
-#: account/admin.py:29
+#: account/admin.py:34
 msgid "Important dates"
 msgstr "最終ログイン日とアカウント作成日"
 
-#: account/forms.py:15
-msgid "e-mail address"
-msgstr "Eメールアドレス"
-
-#: account/models.py:48
-msgid "screen name"
-msgstr "表示名"
-
-#: account/models.py:51
-msgid "Option. 128 characters or fewer."
-msgstr "任意：128文字以下で設定"
-
-#: account/models.py:53
+#: account/forms.py:14
 msgid "email address"
 msgstr "Eメールアドレス"
 
-#: account/models.py:55
+#: account/forms.py:32
+msgid "staff user"
+msgstr "スタッフユーザ"
+
+#: account/forms.py:33
+msgid "normal user"
+msgstr "通常ユーザ"
+
+#: account/models.py:50
+msgid "screen name"
+msgstr "表示名"
+
+#: account/models.py:53
+msgid "Option. 128 characters or fewer."
+msgstr "任意：128文字以下で設定"
+
+#: account/models.py:57
 msgid "staff status"
 msgstr "スタッフ権限"
 
-#: account/models.py:57
+#: account/models.py:59
 msgid "Designates whether the user can log into this admin site."
 msgstr "管理者サイトへのアクセス権の指定"
 
-#: account/models.py:60
+#: account/models.py:62
 msgid "active"
 msgstr "アカウントの状態（有効or無効）"
 
-#: account/models.py:63
+#: account/models.py:65
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr "アカウントの状態（有効or無効）の指定"
 
-#: account/models.py:66
+#: account/models.py:68
 msgid "date joined"
 msgstr "アカウント作成日"
 
-#: account/models.py:75
+#: account/models.py:77
 msgid "user"
 msgstr "ユーザ"
 
-#: account/models.py:76
+#: account/models.py:78
 msgid "users"
 msgstr "ユーザグループ"
+
+#: account/models.py:98
+msgid "score"
+msgstr "ポイントの合計"
+
+#: account/models.py:100
+msgid "number of achievements"
+msgstr "達成数"
+
+#: account/models.py:102
+msgid "date of birth"
+msgstr "生年月日"

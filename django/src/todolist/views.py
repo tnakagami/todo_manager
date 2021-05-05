@@ -30,17 +30,22 @@ class DoingTasks(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = models.TaskCategory.objects.all()
+        qs = self.get_queryset()
+        categories = models.TaskCategory.objects.all()
+        category_pks = categories.values_list('pk', flat=True)
+        context['categories'] = categories
+        context['completed_count'] = {pk: qs.filter(category__pk=pk, is_done=True).count() for pk in category_pks}
+        context['total_count'] = {pk: qs.filter(category__pk=pk).count() for pk in category_pks}
 
         return context
 
-class History(LoginRequiredMixin, ListView):
+class EarnedPointsHistory(LoginRequiredMixin, ListView):
     """
-    history
+    earned points history
     """
     raise_exception = True
     model = models.Task
-    template_name = 'todolist/history.html'
+    template_name = 'todolist/earned_point_history.html'
     paginate_by = 50
     context_object_name = 'tasks'
 

@@ -6,5 +6,5 @@ def category_filter2list(qs, pk):
     return [data for data in qs if data.pk == pk]
 
 @register.filter
-def is_done_filter2list(qs):
-    return list(filter(lambda data: data.is_done, qs))
+def lookup(data, key, default=''):
+    return data.get(key, default)
