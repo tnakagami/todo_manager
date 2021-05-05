@@ -4,41 +4,56 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-12">
-        <div class="row">
-            <div class="col-12">
-                <h3 class="h3 mt-1">デイリーミッション（達成度：{{ summary.is_done }} / {{ summary.total }}）</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">期日</th>
-                            <th>タスク内容</th>
-                            <th>得点</th>
-                            <th>状態</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for task in tasks %}
-                        <tr>
-                            <td>
-                                {{ task.limit_date|date:'Y-m-d' }}
-                            </td>
-                            <td>
-                                <a href="{% url 'todolist:detail_doing' task.pk %}">{{ task.title }}</a>
-                            </td>
-                            <td>
-                                {{ task.point }}
-                            </td>
-                            <td>
-                            {% if task.is_done %}
-                            <button type="button" class="btn btn-outline-secondary btn-block" disabled>達成済</button>
-                            {% else %}
-                            <button type="button" class="btn btn-primary btn-block task-modal-button" data-url="{% url 'todolist:update_task_status' task.pk %}" data-title="{{ task.title }}">挑戦中</button>
-                            {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <ul class="nav nav-tabs nav-fill">
+            <li class="nav-item">
+                <a class="nav-link active" id="daily-task-tab" data-toggle="tab" href="#daily-task" role="tab" aria-controls="daily-task" aria-selected="true">デイリーミッション</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="week-task-tab" data-toggle="tab" href="#week-task" role="tab" aria-controls="week-task" aria-selected="false">ウィークミッション</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="daily-task" role="tabpanel" aria-labelledby="daily-task-tab">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="h3 mt-1">デイリーミッション（達成度：）</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">期日</th>
+                                    <th>タスク内容</th>
+                                    <th>得点</th>
+                                    <th>状態</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in tasks %}
+                                <tr>
+                                    <td>
+                                        {{ task.limit_date|date:'Y-m-d' }}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'todolist:detail_doing' task.pk %}">{{ task.title }}</a>
+                                    </td>
+                                    <td>
+                                        {{ task.point }}
+                                    </td>
+                                    <td>
+                                    {% if task.is_done %}
+                                    <button type="button" class="btn btn-outline-secondary btn-block" disabled>達成済</button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-primary btn-block task-modal-button" data-url="{% url 'todolist:update_task_status' task.pk %}" data-title="{{ task.title }}">挑戦中</button>
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>        
+            </div>
+            <div class="tab-pane fade" id="week-task" role="tabpanel" aria-labelledby="week-task-tab">
+                dummy
             </div>
         </div>
     </div>

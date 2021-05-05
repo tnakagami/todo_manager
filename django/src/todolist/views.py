@@ -23,7 +23,7 @@ class DoingTasks(LoginRequiredMixin, ListView):
     context_object_name = 'tasks'
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(user=self.request.user, limit_date__date=date.today())
+        queryset = super().get_queryset().filter(user=self.request.user)
         queryset = queryset.order_by('-pk')
 
         return queryset
@@ -36,35 +36,19 @@ class DoingTasks(LoginRequiredMixin, ListView):
 
         return context
 
-class TaskHistory(LoginRequiredMixin, ListView):
+class History(LoginRequiredMixin, ListView):
     """
-    Task history
+    history
     """
     raise_exception = True
     model = models.Task
-    template_name = 'todolist/task_history.html'
+    template_name = 'todolist/history.html'
     paginate_by = 50
     context_object_name = 'tasks'
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(user=self.request.user, complete_date__gte=date.today())
+        queryset = super().get_queryset().filter(user=self.request.user, complete_date__lte=date.today(), is_done=True)
         queryset = queryset.order_by('-complete_date')
-
-        return queryset
-
-class PointHistory(LoginRequiredMixin, ListView):
-    """
-    Point history
-    """
-    raise_exception = True
-    model = models.PointHistory
-    template_name = 'todolist/point_history.html'
-    paginate_by = 100
-    context_object_name = 'points'
-
-    def get_queryset(self):
-        queryset = super().get_queryset().filter(user=self.request.user)
-        queryset = queryset.order_by('-used_date')
 
         return queryset
 

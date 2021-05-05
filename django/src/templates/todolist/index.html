@@ -12,7 +12,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td scope="row">デイリーミッション</td>
+                    <td scope="row">挑戦中のタスク</td>
                     <td>
                         <a href="{% url 'todolist:doing_task' %}" class="btn btn-outline-primary btn-block" target="_self">
                             Let's go!
@@ -20,17 +20,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td scope="row">タスク履歴</td>
-                    <td>
-                        <a href="{% url 'todolist:task_history' %}" class="btn btn-outline-primary btn-block" target="_self">
-                            Let's go!
-                        </a>
-                    </td>
-                </tr>
-                <tr>
                     <td scope="row">ポイント履歴</td>
                     <td>
-                        <a href="#" class="btn btn-outline-primary btn-block" target="_self">
+                        <a href="{% url 'todolist:history' %}" class="btn btn-outline-primary btn-block" target="_self">
                             Let's go!
                         </a>
                     </td>

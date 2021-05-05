@@ -95,11 +95,16 @@ class UserProfile(models.Model):
     # 紐づけるユーザ
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     # スコア
-    score = models.IntegerField(validators=[MinValueValidator(0)], default=0)
+    score = models.IntegerField(ugettext_lazy('score'), validators=[MinValueValidator(0)], default=0)
     # 達成数
-    achievements = models.IntegerField(validators=[MinValueValidator(0)], default=0)
+    achievements = models.IntegerField(ugettext_lazy('achievements'), validators=[MinValueValidator(0)], default=0)
     # 生年月日
-    date_of_birth = models.DateTimeField(ugettext_lazy('date of birth'), default=timezone.make_aware(datetime(1900, 1, 1)))
+    date_of_birth = models.DateTimeField(ugettext_lazy('date of birth'), default=timezone.make_aware(datetime(2000, 1, 1)))
+
+    def update(self, profile):
+        self.score = profile.score
+        self.achievements = profile.achievements
+        self.date_of_birth = profile.date_of_birth
 
 @receiver(post_save, sender=User)
 def create_profile(sender, **kwargs):
@@ -107,4 +112,8 @@ def create_profile(sender, **kwargs):
     新ユーザー作成時に空のprofileも作成する
     """
     if kwargs['created']:
-        user_profile = UserProfile.objects.get_or_create(user=kwargs['instance'])
+        profile, _ = UserProfile.objects.get_or_create(user=kwargs['instance'])
+
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save()

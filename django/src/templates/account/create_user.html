@@ -1,0 +1,58 @@
+{% extends "account/breadcrumbs_account.html" %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "ユーザ作成" "account:create_user" %}
+{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" /></link>
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12">
+    {% if user.is_staff %}
+        <div class="row">
+            <div class="col-12">
+                <form action="" method="POST" id="user-form">
+                    {% csrf_token %}
+                    {{ user_form.as_p }}
+                    <hr>
+                    {{ profile_form.as_p }}
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <button type="submit" class="btn btn-primary btn-block" form="user-form">送信</button>
+            </div>
+            <div class="col-6">
+                <a href="{% url 'account:index' %}" class="btn btn-secondary btn-block" >戻る</a>
+            </div>
+        </div>
+    {% else %}
+        ページを表示する権限がありません。
+    {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block bodyjs %}
+    {{ block.super }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/ja.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script>
+        (function (){
+            $('#datetimepicker').datetimepicker({
+                locale: 'ja',
+                dayViewHeaderFormat: 'YYYY-MM-DD',
+                format: 'YYYY-MM-DD'
+            });
+        }());
+    </script>
+{% endblock %}

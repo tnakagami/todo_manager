@@ -8,8 +8,7 @@ urlpatterns = [
     path('', views.TopPage.as_view(), name='index'),
     # own task
     path('doing/', views.DoingTasks.as_view(), name='doing_task'),
-    path('history/', views.TaskHistory.as_view(), name='task_history'),
-    path('point/', views.PointHistory.as_view(), name='point_history'),
+    path('history/', views.History.as_view(), name='history'),
     path('detail_doing/<int:pk>', views.DetailTask.as_view(template_name='todolist/detail_doing.html'), name='detail_doing'),
     path('detail_history/<int:pk>', views.DetailTask.as_view(template_name='todolist/detail_history.html'), name='detail_history'),
     path('update/<int:pk>', views.UpdateTaskStatus.as_view(), name='update_task_status'),
