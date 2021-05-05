@@ -9,6 +9,11 @@ User = get_user_model()
 class TaskCategory(models.Model):
     name = models.CharField(ugettext_lazy('category name'), max_length=64)
 
+    def __str__(self):
+        return self.__unicode__()
+    def __unicode__(self):
+        return self.name
+
 class Task(models.Model):
     # user
     user = models.ForeignKey(User, on_delete=models.CASCADE)

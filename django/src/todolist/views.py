@@ -45,7 +45,7 @@ class History(LoginRequiredMixin, ListView):
     context_object_name = 'tasks'
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(user=self.request.user, complete_date__lte=date.today(), is_done=True)
+        queryset = super().get_queryset().filter(user=self.request.user, complete_date__gte=date.today(), is_done=True)
         queryset = queryset.order_by('-complete_date')
 
         return queryset
@@ -103,9 +103,14 @@ class UpdateTaskStatus(AccessMixin, UpdateView):
     def form_valid(self, form):
         task = self.model.objects.get(pk=self.kwargs['pk'])
         task.is_done = not task.is_done
+
         if task.is_done:
             # 完了時に完了日を更新
             task.complete_date = timezone.now()
+            # ポイントを加算
+            self.request.user.profile.score += task.point
+            self.request.user.profile.save()
+
         task.save()
 
         return HttpResponseRedirect(self.get_success_url())

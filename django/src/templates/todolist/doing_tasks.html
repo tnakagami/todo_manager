@@ -16,12 +16,12 @@
         </ul>
         <div class="tab-content">
             {% for category in categories %}
-            <div class="tab-pane fade {% if forloop.first %}show active{% else %}{% endif %}" id="category{{ category.pk }}" role="tabpanel" aria-labelledby="category{{ category.pk }}">
+            <div class="mt-3 tab-pane fade {% if forloop.first %}show active{% else %}{% endif %}" id="category{{ category.pk }}" role="tabpanel" aria-labelledby="category{{ category.pk }}">
                 <div class="row">
                     <div class="col-12">
-                    {% with tasks|category_filter:category.name as targets %}
-                        {% with targets|is_done_filter as is_done_qs %}
-                        <h3 class="h3 mt-1">{{ category.name }}（達成度：{{ is_done_qs.count }} / {{ targets.count }}）</h3>
+                    {% with tasks|category_filter2list:category.pk as targets %}
+                        {% with targets|is_done_filter2list as is_done_qs %}
+                        <h3 class="h3">{{ category.name }}（達成度：{{ is_done_qs|length }} / {{ targets|length }}）</h3>
                         {% endwith %}
                         <table class="table table-striped">
                             <thead>
