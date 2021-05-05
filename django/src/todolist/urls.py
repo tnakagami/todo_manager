@@ -15,6 +15,7 @@ urlpatterns = [
     # create task
     path('create/task', views.CreateTask.as_view(), name='create_task'),
     path('create/task_category', views.CreateTaskCategory.as_view(), name='create_task_category'),
-    # each user tasks
-    path('each_user_tasks/', views.EachUserTaskPage.as_view(), name='each_user_tasks'),
+    # each user
+    path('each_user/', views.EachUserPage.as_view(), name='each_user'),
+    path('each_user/detail/<int:pk>', views.DetailUserTaskPage.as_view(), name='detail_user_tasks'),
 ]

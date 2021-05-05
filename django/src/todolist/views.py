@@ -3,11 +3,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, 
 from django.urls import reverse_lazy
 from django.http import Http404, HttpResponseRedirect
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DetailView
+from django.core.paginator import Paginator
 from django.utils import timezone
 from datetime import date
 from . import models, forms
 
 User = get_user_model()
+
+def paginate_query(request, queryset, count):
+    paginator = Paginator(queryset, count)
+    page = request.GET.get('page')
+    page_obj = paginator.get_page(page)
+
+    return paginator, page_obj
 
 class TopPage(LoginRequiredMixin, TemplateView):
     template_name = 'todolist/index.html'
@@ -148,15 +156,15 @@ class CreateTask(StaffUserMixin, CreateView):
     template_name = 'todolist/create_task.html'
     success_url = reverse_lazy('todolist:index')
 
-class EachUserTaskPage(StaffUserMixin, ListView):
+class EachUserPage(StaffUserMixin, ListView):
     raise_exception = True
-    model = models.Task
-    template_name = 'todolist/each_user_tasks.html'
+    model = User
+    template_name = 'todolist/each_user.html'
     paginate_by = 100
-    context_object_name = 'tasks'
+    context_object_name = 'users'
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().filter(is_staff=False)
         form = forms.UserSearchForm(self.request.GET or None)
  
         # check form
@@ -169,12 +177,25 @@ class EachUserTaskPage(StaffUserMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        tasks = self.model.objects.all()
-        users = User.objects.all().filter(is_staff=False).order_by('-pk')
-        user_pks = users.values_list('pk', flat=True)
+        tasks = models.Task.objects.all()
+        user_pks = self.get_queryset().values_list('pk', flat=True)
         context['search_form'] = forms.UserSearchForm(self.request.GET or None)
-        context['users'] = users
         context['completed_count'] = {pk: tasks.filter(user=pk, is_done=True).count() for pk in user_pks}
         context['doing_count'] = {pk: tasks.filter(user=pk, is_done=False).count() for pk in user_pks}
+
+        return context
+
+class DetailUserTaskPage(StaffUserMixin, DetailView):
+    raise_exception = True
+    model = User
+    template_name = 'todolist/detail_user_tasks.html'
+    context_object_name = 'target_user'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tasks = models.Task.objects.filter(user__pk=self.kwargs['pk']).order_by('-pk')
+        paginator, page_obj = paginate_query(self.request, tasks, 10)
+        context['paginator'] = paginator
+        context['page_obj'] = page_obj
 
         return context

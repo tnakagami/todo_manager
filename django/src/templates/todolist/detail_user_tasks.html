@@ -1,81 +1,27 @@
-{% extends 'todolist/breadcrumbs_todolist.html' %}
+{% extends 'todolist/breadcrumbs_todolist_each_user.html' %}
 {% load django_bootstrap_breadcrumbs %}
 {% load markdown_extras %}
 {% load custom_filter %}
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "ユーザごとのタスク" "todolist:each_user_tasks" %}
+    {% breadcrumb target_user.email "todolist:detail_user_tasks" target_user.pk %}
 {% endblock %}
 
 {% block content %}
 {% if user.is_staff %}
 <div class="row justify-content-center">
-    <div class="card col-12">
-        <div class="card-body">
-            <h5 class="card-title">絞り込み検索</h5>
-            <form action="", method="GET" id="search-form">
-                <div class="form-row">
-                    <div class="col-12">
-                        {{ search_form.user }}
-                    </div>
-                </div>
-            </form>
-            <div class="row mt-1">
-                <div class="col-6">
-                    <button type="submit" class="btn btn-primary btn-block" form="search-form">検索</button>
-                </div>
-                <div class="col-6">
-                    <a href="{% url 'todolist:each_user_tasks' %}" class="btn btn-secondary btn-block">全件表示</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row justify-content-center">
-    <div class="col-12">
-        <h3 class="h3 mt-1">ユーザごとの進捗状況一覧</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">ユーザ</th>
-                    <th>挑戦中のタスク数</th>
-                    <th>達成済のタスク数</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for target_user in users %}
-                <tr>
-                    <td>
-                        {{ target_user.email }}
-                    </td>
-                    <td>
-                        {{ doing_count|lookup:target_user.pk }}
-                    </td>
-                    <td>
-                        {{ completed_count|lookup:target_user.pk }}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row justify-content-center">
     <div class="col-12">
         <h3 class="h3 mt-1">各タスクの進捗状況詳細</h3>
-        {% for task in tasks %}
+        {% for task in page_obj %}
         <div class="row mt-3">
             <div class="card text-left col-12">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-4">
-                            ユーザ：{{ task.user.email }}
-                        </div>
-                        <div class="col-4">
+                        <div class="col-6">
                             種別：{{ task.category.name }}
                         </div>
-                        <div class="col-4">
+                        <div class="col-6">
                             達成状況：
                             {% if task.is_done %}
                             達成
