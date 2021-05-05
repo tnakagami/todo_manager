@@ -9,6 +9,8 @@ urlpatterns = [
     # Login, Logout
     path('login/', views.LoginPage.as_view(), name='login'),
     path('logout/', views.LogoutPage.as_view(), name='logout'),
+    # user profile
+    path('profile/', views.UserProfilePage.as_view(), name='user_profile'),
     # create user
     path('create_user/', views.CreateUserPage.as_view(), name='create_user'),
 ]

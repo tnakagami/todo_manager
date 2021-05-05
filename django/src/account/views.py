@@ -26,6 +26,12 @@ class LogoutPage(LogoutView):
     """
     template_name = 'account/index.html'
 
+class UserProfilePage(LoginRequiredMixin, TemplateView):
+    """
+    Profile Page
+    """
+    template_name = 'account/user_profile.html'
+
 class CreateUserPage(UserPassesTestMixin, View):
     def test_func(self):
         user = self.request.user

@@ -109,6 +109,7 @@ class UpdateTaskStatus(AccessMixin, UpdateView):
             task.complete_date = timezone.now()
             # ポイントを加算
             self.request.user.profile.score += task.point
+            self.request.user.profile.achievements += 1
             self.request.user.profile.save()
 
         task.save()

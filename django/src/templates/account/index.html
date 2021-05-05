@@ -42,6 +42,14 @@
                         </tr>
                         {% else %}
                         <tr>
+                            <td scope="row">ユーザプロファイル</td>
+                            <td>
+                                <a href="{% url 'account:user_profile' %}" class="btn btn-outline-primary btn-block" target="_self">
+                                    Let's go!
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
                             <td scope="row">ToDoリスト</td>
                             <td>
                                 <a href="{% url 'todolist:index' %}" class="btn btn-outline-primary btn-block" target="_self">
