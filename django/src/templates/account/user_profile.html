@@ -1,0 +1,45 @@
+{% extends 'account/breadcrumbs_account.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "ユーザプロファイル" "account:user_profile" %}
+{% endblock %}
+
+
+{% block content %}
+<div class="row justify-content-center">
+    {% if user.is_authenticated  %}
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">項目</th>
+                            <th>値</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td scope="row">合計ポイント</td>
+                            <td>{{ user.profile.score }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">達成数</td>
+                            <td>{{ user.profile.achievements }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="row">
+            <h5 class="h5">上のリンクからログインしてください。</h5>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

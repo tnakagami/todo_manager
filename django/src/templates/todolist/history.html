@@ -1,0 +1,49 @@
+{% extends 'todolist/breadcrumbs_todolist_task_history.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12">
+                <h3 class="h3 mt-1">ポイント履歴（合計：{{ total }}件）</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">タスク内容</th>
+                            <th>ポイント</th>
+                            <th>期日</th>
+                            <th>達成日</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'todolist:detail_history' task.pk %}">{{ task.title }}</a>
+                            </td>
+                            <td>
+                                {{ task.point }}
+                            </td>
+                            <td>
+                                {{ task.limit_date|date:'Y-m-d' }}
+                            </td>
+                            <td>
+                                {{ task.complete_date|date:'Y-m-d' }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if tasks %}
+<div class="row justify-content-center">
+    <div class="col-12">
+{% include "pagination.html" %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

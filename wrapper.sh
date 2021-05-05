@@ -36,6 +36,15 @@ while [ -n "$1" ]; do
             shift
             ;;
 
+        init )
+            docker exec -it django python manage.py makemigrations account
+            docker exec -it django python manage.py makemigrations todolist
+            docker exec -it django python manage.py migrate
+            docker exec -it mysql bash -c 'mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -D mysql -u root -p${MYSQL_ROOT_PASSWORD} && mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "flush tables;" mysql'
+            docker exec -it django bash -c 'python manage.py custom_createsuperuser --email ${DJANGO_SUPERUSER_EMAIL} --password ${DJANGO_SUPERUSER_PASSWORD}'
+            shift
+            ;;
+
         test_build )
             docker-compose -f ${TEST_COMPOSE_FILE} build
             # delete image of none

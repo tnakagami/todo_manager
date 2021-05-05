@@ -1,0 +1,109 @@
+{% extends 'todolist/breadcrumbs_todolist.html' %}
+{% load django_bootstrap_breadcrumbs %}
+{% load markdown_extras %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "ユーザごとのタスク" "todolist:each_user_tasks" %}
+{% endblock %}
+
+{% block content %}
+{% if user.is_staff %}
+<div class="row justify-content-center">
+    <div class="card col-12">
+        <div class="card-body">
+            <h5 class="card-title">絞り込み検索</h5>
+            <form action="", method="GET" id="search-form">
+                <div class="form-row">
+                    <div class="col-12">
+                        {{ search_form.user }}
+                    </div>
+                </div>
+            </form>
+            <div class="row mt-1">
+                <div class="col-6">
+                    <button type="submit" class="btn btn-primary btn-block" form="search-form">検索</button>
+                </div>
+                <div class="col-6">
+                    <a href="{% url 'todolist:each_user_tasks' %}" class="btn btn-secondary btn-block">全件表示</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-12">
+        {% for task in tasks %}
+        <div class="row mt-1">
+            <div class="card text-left col-12">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-4">
+                            ユーザ：{{ task.user.email }}
+                        </div>
+                        <div class="col-4">
+                            種別：{{ task.category.name }}
+                        </div>
+                        <div class="col-4">
+                            達成状況：
+                            {% if task.is_done %}
+                            達成
+                            {% else %}
+                            <font color="red">未達成</font>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ task.title }}</h5>
+                    <div class="row">
+                        <div class="col-12">
+                            {{ task.text | markdown2html }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-6">
+                            期日：{{ task.limit_date|date:'Y-m-d' }}
+                        </div>
+                        <div class="col-6">
+                        {% if task.is_done %}
+                            達成日：{{ task.complete_date|date:'Y-m-d' }}
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% if tasks %}
+<div class="row justify-content-center mt-3">
+    <div class="col-12">
+{% include "pagination.html" %}
+    </div>
+</div>
+{% endif %}
+{% else %}
+<div class="row justify-content-center mt-3">
+    <div class="col-12">
+        ページを表示する権限がありません。
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block bodyjs %}
+<script>
+(function() {
+    const selectElement = document.querySelector('#{{ search_form.user.auto_id }}');
+    selectElement.addEventListener('change', (event) => {
+        const searchForm = document.getElementById('search-form');
+        searchForm.submit();
+    });
+}());
+</script>
+{% endblock %}

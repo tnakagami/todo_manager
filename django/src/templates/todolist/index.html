@@ -1,159 +1,60 @@
-{% extends "todolist/breadcrumbs_todolist.html" %}
+{% extends 'todolist/breadcrumbs_todolist.html' %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-12">
-        <div class="row">
-            <div class="col-12">
-                <h3 class="h3">集計結果</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            {% if user.is_staff or user.is_superuser %}
-                            <th scope="col">ユーザ</th>
-                            <th>達成度</th>
-                            <th>スコア</th>
-                            {% else %}
-                            <th scope="col">達成度</th>
-                            <th>スコア</th>
-                            {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for data in aggregated %}
-                        <tr>
-                            {% if user.is_staff or user.is_superuser %}
-                            <td>
-                                {% if data.screen_name %}
-                                {{ data.screen_name }}
-                                {% else %}
-                                {{ data.email }}
-                                {% endif %}
-                            </td>
-                            {% endif %}
-                            <td>
-                                {{ data.finished }} / {{ data.total }}
-                            </td>
-                            <td>
-                                {{ data.score }}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <h3 class="h3 mt-1">内訳</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            {% if user.is_staff or user.is_superuser %}
-                            <th scope="col">ユーザ</th>
-                            <th>タスク内容</th>
-                            <th>得点</th>
-                            <th>状態</th>
-                            {% else %}
-                            <th scope="col">タスク内容</th>
-                            <th>得点</th>
-                            <th>状態</th>
-                            {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for task in tasks %}
-                        <tr>
-                            {% if user.is_staff or user.is_superuser %}
-                            <td>
-                                {% if task.user.screen_name %}
-                                {{ task.user.screen_name }}
-                                {% else %}
-                                {{ task.user.email }}
-                                {% endif %}
-                            </td>
-                            {% endif %}
-                            <td>
-                                <a href="{% url 'todolist:detail_task' task.pk %}">{{ task.title }}</a>
-                            </td>
-                            <td>
-                                {{ task.point }}
-                            </td>
-                            <td>
-                            {% if user.is_staff or user.is_superuser %}
-                            <input type="checkbox" {% if task.is_done %}checked{% endif %} data-toggle="toggle" data-on="完了" data-off="未完了" data-onstyle="secondary" data-offstyle="primary" class="change-checkbox-trigger" onchange="change_toggle('{% url 'todolist:update_task_status' task.pk %}');">
-                            {% else %}
-                                {% if task.is_done %}
-                                <button type="button" class="btn btn-outline-secondary btn-block" disabled>終わった</button>
-                                {% else %}
-                                <button type="button" class="btn btn-primary btn-block task-modal-button" data-url="{% url 'todolist:update_task_status' task.pk %}" data-title="{{ task.title }}">終わった</button>
-                                {% endif %}
-                            {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">項目</th>
+                    <th>リンク</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td scope="row">挑戦中のタスク</td>
+                    <td>
+                        <a href="{% url 'todolist:doing_task' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">ポイント履歴</td>
+                    <td>
+                        <a href="{% url 'todolist:history' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
+                {% if user.is_staff %}
+                <tr>
+                    <td scope="row">タスクカテゴリの作成</td>
+                    <td>
+                        <a href="{% url 'todolist:create_task_category' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">タスクの作成</td>
+                    <td>
+                        <a href="{% url 'todolist:create_task' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">ユーザごとのタスク確認</td>
+                    <td>
+                        <a href="{% url 'todolist:each_user_tasks' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
     </div>
 </div>
-
-<div class="modal" tabindex="-1" role="dialog" id="task-modal">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">タスクの終了</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>「<span id="task-title"></span>」が終わったことを知らせる</p>
-                <form action="" method="POST" id="task-form">
-                    {% csrf_token %}
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" form="task-form">終わった</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">まだ</button>
-            </div>
-        </div>
-    </div>
-</div>
-{% if tasks %}
-<div class="row justify-content-center">
-    <div class="col-12">
-{% include "pagination.html" %}
-    </div>
-</div>
-{% endif %}
-{% endblock %}
-
-{% block bodyjs %}
-<script>
-(function() {
-    const taskForm = document.getElementById('task-form');
-    const taskModalButtons = document.getElementsByClassName('task-modal-button');
-
-    for (const button of taskModalButtons) {
-        button.addEventListener('click', () => {
-            taskForm.action = button.dataset.url;
-            $('#task-title').text(button.dataset.title);
-
-            $('#task-modal').modal({
-                backdrop: true,
-                keyboard: true,
-            });
-        });
-    }
-}());
-{% if user.is_staff or user.is_superuser %}
-function change_toggle(url) {
-    const taskForm = document.getElementById('task-form');
-    taskForm.action = url;
-    taskForm.submit();
-}
-{% endif %}
-</script>
 {% endblock %}

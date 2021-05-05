@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -23,7 +23,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% if user.is_superuser %}
+                        {% if user.is_staff %}
                         <tr>
                             <td scope="row">Admin管理サイト</td>
                             <td>
@@ -32,7 +32,23 @@
                                 </a>
                             </td>
                         </tr>
-                        {% endif %}
+                        <tr>
+                            <td scope="row">ユーザ作成</td>
+                            <td>
+                                <a href="{% url 'account:create_user' %}" class="btn btn-outline-primary btn-block" target="_self">
+                                    Let's go!
+                                </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td scope="row">ユーザプロファイル</td>
+                            <td>
+                                <a href="{% url 'account:user_profile' %}" class="btn btn-outline-primary btn-block" target="_self">
+                                    Let's go!
+                                </a>
+                            </td>
+                        </tr>
                         <tr>
                             <td scope="row">ToDoリスト</td>
                             <td>
@@ -41,6 +57,7 @@
                                 </a>
                             </td>
                         </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>

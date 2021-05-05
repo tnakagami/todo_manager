@@ -1,60 +1,64 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, AccessMixin
 from django.urls import reverse_lazy
 from django.http import Http404, HttpResponseRedirect
-from django.views.generic import ListView, UpdateView, DetailView
-from django.db.models import Sum, Count
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DetailView
+from django.utils import timezone
+from datetime import date
 from . import models, forms
 
 User = get_user_model()
 
-class ToDoList(LoginRequiredMixin, ListView):
+class TopPage(LoginRequiredMixin, TemplateView):
+    template_name = 'todolist/index.html'
+
+class DoingTasks(LoginRequiredMixin, ListView):
     """
-    ToDo list
+    Doing task list
     """
     raise_exception = True
     model = models.Task
-    template_name = 'todolist/index.html'
+    template_name = 'todolist/doing_tasks.html'
     paginate_by = 10
     context_object_name = 'tasks'
 
     def get_queryset(self):
-        user = self.request.user
-        queryset = super().get_queryset()
-
-        if not (user.is_staff or user.is_superuser):
-            queryset = queryset.filter(user=user)
-        queryset = queryset.order_by('-created_at')
+        queryset = super().get_queryset().filter(user=self.request.user)
+        queryset = queryset.order_by('-pk')
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # 結果の集計
-        total_qs = self.object_list.values('user', 'user__screen_name', 'user__email').annotate(total=Count('point')).order_by()
-        is_done_qs = self.object_list.filter(is_done=True).values('user').annotate(score=Sum('point'), finished=Count('point')).order_by()
-        totals = {
-            data['user']: {
-                'screen_name': data['user__screen_name'],
-                'email': data['user__email'],
-                'finished': 0,
-                'total': data['total'],
-                'score': 0,
-            } for data in total_qs
-        }
-        # 結果の統合
-        for data in is_done_qs:
-            target_user = data['user']
-            totals[target_user]['finished'] = data['finished']
-            totals[target_user]['score'] = data['score']
-        context['aggregated'] = list(totals.values())
+        context['categories'] = models.TaskCategory.objects.all()
+
+        return context
+
+class History(LoginRequiredMixin, ListView):
+    """
+    history
+    """
+    raise_exception = True
+    model = models.Task
+    template_name = 'todolist/history.html'
+    paginate_by = 50
+    context_object_name = 'tasks'
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(user=self.request.user, complete_date__gte=date.today(), is_done=True)
+        queryset = queryset.order_by('-complete_date')
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total'] = self.get_queryset().count()
 
         return context
 
 class DetailTask(AccessMixin, DetailView):
     raise_exception = True
     model = models.Task
-    template_name = 'todolist/detail_task.html'
 
     def get_object(self, queryset=None):
         try:
@@ -77,7 +81,7 @@ class UpdateTaskStatus(AccessMixin, UpdateView):
     model = models.Task
     form_class = forms.UpdateTaskStatus
     template_name = '404.html'
-    success_url = reverse_lazy('todolist:index')
+    success_url = reverse_lazy('todolist:doing_task')
 
     def get(self, request, *args, **kwargs):
         # ignore direct access
@@ -105,6 +109,61 @@ class UpdateTaskStatus(AccessMixin, UpdateView):
     def form_valid(self, form):
         task = self.model.objects.get(pk=self.kwargs['pk'])
         task.is_done = not task.is_done
+
+        if task.is_done:
+            # 完了時に完了日を更新
+            task.complete_date = timezone.now()
+            # ポイントを加算
+            self.request.user.profile.score += task.point
+            self.request.user.profile.achievements += 1
+            self.request.user.profile.save()
+
         task.save()
 
         return HttpResponseRedirect(self.get_success_url())
+
+class StaffUserMixin(UserPassesTestMixin):
+    raise_exception = True
+
+    def test_func(self):
+        user = self.request.user
+        ret = user.is_authenticated and user.is_staff
+
+        return ret
+
+class CreateTaskCategory(StaffUserMixin, CreateView):
+    model = models.TaskCategory
+    form_class = forms.CreateTaskCategory
+    template_name = 'todolist/create_task_category.html'
+    success_url = reverse_lazy('todolist:index')
+
+class CreateTask(StaffUserMixin, CreateView):
+    model = models.Task
+    form_class = forms.CreateTask
+    template_name = 'todolist/create_task.html'
+    success_url = reverse_lazy('todolist:index')
+
+class EachUserTaskPage(StaffUserMixin, ListView):
+    raise_exception = True
+    model = models.Task
+    template_name = 'todolist/each_user_tasks.html'
+    paginate_by = 100
+    context_object_name = 'tasks'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = forms.UserSearchForm(self.request.GET or None)
+ 
+        # check form
+        if form.is_valid():
+            queryset = form.filtered_queryset(queryset)
+        # ordering
+        queryset = queryset.order_by('-pk')
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = forms.UserSearchForm(self.request.GET or None)
+
+        return context

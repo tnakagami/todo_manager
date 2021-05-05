@@ -1,0 +1,120 @@
+{% extends 'todolist/breadcrumbs_todolist_doing_task.html' %}
+{% load django_bootstrap_breadcrumbs %}
+{% load custom_filter %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12">
+        <ul class="nav nav-tabs nav-fill">
+            {% for category in categories %}
+            <li class="nav-item">
+                <a class="nav-link {% if forloop.first %}active{% else %}{% endif %}" id="category{{ category.pk }}-tab" data-toggle="tab" href="#category{{ category.pk }}" role="tab" aria-controls="category{{ category.pk }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                    {{ category.name }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for category in categories %}
+            <div class="mt-3 tab-pane fade {% if forloop.first %}show active{% else %}{% endif %}" id="category{{ category.pk }}" role="tabpanel" aria-labelledby="category{{ category.pk }}">
+                <div class="row">
+                    <div class="col-12">
+                    {% with tasks|category_filter2list:category.pk as targets %}
+                        {% with targets|is_done_filter2list as is_done_qs %}
+                        <h3 class="h3">{{ category.name }}（達成度：{{ is_done_qs|length }} / {{ targets|length }}）</h3>
+                        {% endwith %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">期日</th>
+                                    <th>タスク内容</th>
+                                    <th>ポイント</th>
+                                    <th>状態</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in targets %}
+                                <tr>
+                                    <td>
+                                        {{ task.limit_date|date:'Y-m-d' }}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'todolist:detail_doing' task.pk %}">{{ task.title }}</a>
+                                    </td>
+                                    <td>
+                                        {{ task.point }}
+                                    </td>
+                                    <td>
+                                    {% if task.is_done %}
+                                    <button type="button" class="btn btn-outline-secondary btn-block" disabled>達成済</button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-primary btn-block task-modal-button" data-url="{% url 'todolist:update_task_status' task.pk %}" data-title="{{ task.title }}">挑戦中</button>
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endwith %}
+                    </div>
+                </div>        
+            </div>
+            {% endfor %}
+            <div class="tab-pane fade" id="week-task" role="tabpanel" aria-labelledby="week-task-tab">
+                dummy
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="task-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">タスク達成</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>「<span id="task-title"></span>」を達成した！</p>
+                <form action="" method="POST" id="task-form">
+                    {% csrf_token %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" form="task-form">報告</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% if tasks %}
+<div class="row justify-content-center">
+    <div class="col-12">
+{% include "pagination.html" %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block bodyjs %}
+<script>
+(function() {
+    const taskForm = document.getElementById('task-form');
+    const taskModalButtons = document.getElementsByClassName('task-modal-button');
+
+    for (const button of taskModalButtons) {
+        button.addEventListener('click', () => {
+            taskForm.action = button.dataset.url;
+            $('#task-title').text(button.dataset.title);
+
+            $('#task-modal').modal({
+                backdrop: true,
+                keyboard: true,
+            });
+        });
+    }
+}());
+</script>
+{% endblock %}
