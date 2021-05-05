@@ -169,6 +169,12 @@ class EachUserTaskPage(StaffUserMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        tasks = self.model.objects.all()
+        users = User.objects.all().filter(is_staff=False).order_by('-pk')
+        user_pks = users.values_list('pk', flat=True)
         context['search_form'] = forms.UserSearchForm(self.request.GET or None)
+        context['users'] = users
+        context['completed_count'] = {pk: tasks.filter(user=pk, is_done=True).count() for pk in user_pks}
+        context['doing_count'] = {pk: tasks.filter(user=pk, is_done=False).count() for pk in user_pks}
 
         return context

@@ -1,6 +1,7 @@
 {% extends 'todolist/breadcrumbs_todolist.html' %}
 {% load django_bootstrap_breadcrumbs %}
 {% load markdown_extras %}
+{% load custom_filter %}
 
 {% block breadcrumbs %}
     {{ block.super }}
@@ -33,8 +34,38 @@
 </div>
 <div class="row justify-content-center">
     <div class="col-12">
+        <h3 class="h3 mt-1">ユーザごとの進捗状況一覧</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">ユーザ</th>
+                    <th>挑戦中のタスク数</th>
+                    <th>達成済のタスク数</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for target_user in users %}
+                <tr>
+                    <td>
+                        {{ target_user.email }}
+                    </td>
+                    <td>
+                        {{ doing_count|lookup:target_user.pk }}
+                    </td>
+                    <td>
+                        {{ completed_count|lookup:target_user.pk }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-12">
+        <h3 class="h3 mt-1">各タスクの進捗状況詳細</h3>
         {% for task in tasks %}
-        <div class="row mt-1">
+        <div class="row mt-3">
             <div class="card text-left col-12">
                 <div class="card-header">
                     <div class="row">

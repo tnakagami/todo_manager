@@ -27,8 +27,10 @@ class CreateUserForm(UserCreationForm):
         widgets = {
             'is_staff': forms.CheckboxInput(attrs={
                 'data-toggle': 'toggle',
-                'data-onstyle': 'primary',
-                'data-offstyle': 'danger',
+                'data-onstyle': 'danger',
+                'data-offstyle': 'primary',
+                'data-width': '200',
+                'data-height': '40',
                 'data-on': ugettext_lazy('staff user'),
                 'data-off': ugettext_lazy('normal user'),
             }),
