@@ -32,13 +32,16 @@ class UserProfilePage(LoginRequiredMixin, TemplateView):
     """
     template_name = 'account/user_profile.html'
 
-class CreateUserPage(UserPassesTestMixin, View):
+class StaffUserMixin(UserPassesTestMixin):
+    raise_exception = True
+
     def test_func(self):
         user = self.request.user
         ret = user.is_authenticated and user.is_staff
 
         return ret
 
+class CreateUserPage(StaffUserMixin, View):
     def get(self, request):
         """
         GETでのリクエスト

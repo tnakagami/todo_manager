@@ -97,7 +97,7 @@ class UserProfile(models.Model):
     # スコア
     score = models.IntegerField(ugettext_lazy('score'), validators=[MinValueValidator(0)], default=0)
     # 達成数
-    achievements = models.IntegerField(ugettext_lazy('achievements'), validators=[MinValueValidator(0)], default=0)
+    achievements = models.IntegerField(ugettext_lazy('number of achievements'), validators=[MinValueValidator(0)], default=0)
     # 生年月日
     date_of_birth = models.DateTimeField(ugettext_lazy('date of birth'), default=timezone.make_aware(datetime(2000, 1, 1)))
 

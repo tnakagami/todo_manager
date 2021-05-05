@@ -12,4 +12,7 @@ urlpatterns = [
     path('detail_doing/<int:pk>', views.DetailTask.as_view(template_name='todolist/detail_doing.html'), name='detail_doing'),
     path('detail_history/<int:pk>', views.DetailTask.as_view(template_name='todolist/detail_history.html'), name='detail_history'),
     path('update/<int:pk>', views.UpdateTaskStatus.as_view(), name='update_task_status'),
+    # create task
+    path('create/task', views.CreateTask.as_view(), name='create_task'),
+    path('create/task_category', views.CreateTaskCategory.as_view(), name='create_task_category'),
 ]

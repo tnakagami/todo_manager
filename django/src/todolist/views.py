@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, AccessMixin
 from django.urls import reverse_lazy
 from django.http import Http404, HttpResponseRedirect
-from django.views.generic import TemplateView, ListView, UpdateView, DetailView
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DetailView
 from django.utils import timezone
 from datetime import date
 from . import models, forms
@@ -115,3 +115,24 @@ class UpdateTaskStatus(AccessMixin, UpdateView):
         task.save()
 
         return HttpResponseRedirect(self.get_success_url())
+
+class StaffUserMixin(UserPassesTestMixin):
+    raise_exception = True
+
+    def test_func(self):
+        user = self.request.user
+        ret = user.is_authenticated and user.is_staff
+
+        return ret
+
+class CreateTaskCategory(StaffUserMixin, CreateView):
+    model = models.TaskCategory
+    form_class = forms.CreateTaskCategory
+    template_name = 'todolist/create_task_category.html'
+    success_url = reverse_lazy('todolist:index')
+
+class CreateTask(StaffUserMixin, CreateView):
+    model = models.Task
+    form_class = forms.CreateTask
+    template_name = 'todolist/create_task.html'
+    success_url = reverse_lazy('todolist:index')

@@ -1,4 +1,4 @@
-{% extends "todolist/breadcrumbs_todolist.html" %}
+{% extends 'todolist/breadcrumbs_todolist.html' %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -27,6 +27,24 @@
                         </a>
                     </td>
                 </tr>
+                {% if user.is_staff %}
+                <tr>
+                    <td scope="row">タスクカテゴリの作成</td>
+                    <td>
+                        <a href="{% url 'todolist:create_task_category' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">タスクの作成</td>
+                    <td>
+                        <a href="{% url 'todolist:create_task' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>

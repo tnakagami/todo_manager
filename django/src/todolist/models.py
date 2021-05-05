@@ -16,7 +16,7 @@ class TaskCategory(models.Model):
 
 class Task(models.Model):
     # user
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name=ugettext_lazy('user'), on_delete=models.CASCADE)
     # タスクのタイトル
     title = models.CharField(ugettext_lazy('title'), max_length=64)
     # タスクの内容
@@ -26,9 +26,9 @@ class Task(models.Model):
     # ポイント
     point = models.IntegerField(validators=[MinValueValidator(1)], default=1)
     # 種別
-    category = models.ForeignKey(TaskCategory, on_delete=models.PROTECT)
+    category = models.ForeignKey(TaskCategory, verbose_name=ugettext_lazy('category'), on_delete=models.PROTECT)
     # タスク実施日
-    limit_date = models.DateTimeField(ugettext_lazy('limit date'), default=timezone.now)
+    limit_date = models.DateTimeField(ugettext_lazy('limit date'), default=timezone.localdate)
     # タスク完了日
     complete_date = models.DateTimeField(ugettext_lazy('complete date'), default=timezone.now)
     # 作成日時
@@ -43,9 +43,9 @@ class Task(models.Model):
 
 class PointHistory(models.Model):
     # user
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name=ugettext_lazy('user'), on_delete=models.CASCADE)
     # 使用したポイント
-    used_point = models.IntegerField(validators=[MinValueValidator(0)], default=0)
+    used_point = models.IntegerField(ugettext_lazy('used point'), validators=[MinValueValidator(0)], default=0)
     # 使用日
     used_date = models.DateTimeField(ugettext_lazy('used date'), default=timezone.now)
 

@@ -1,9 +1,9 @@
-{% extends 'account/breadcrumbs_account.html' %}
+{% extends 'todolist/breadcrumbs_todolist.html' %}
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "ユーザ作成" "account:create_user" %}
+    {% breadcrumb "タスクの作成" "todolist:create_task" %}
 {% endblock %}
 
 {% block header %}
@@ -20,9 +20,7 @@
             <div class="col-12">
                 <form action="" method="POST" id="user-form">
                     {% csrf_token %}
-                    {{ user_form.as_p }}
-                    <hr>
-                    {{ profile_form.as_p }}
+                    {{ form.as_p }}
                 </form>
             </div>
         </div>
@@ -31,7 +29,7 @@
                 <button type="submit" class="btn btn-primary btn-block" form="user-form">送信</button>
             </div>
             <div class="col-6">
-                <a href="{% url 'account:index' %}" class="btn btn-secondary btn-block" >戻る</a>
+                <a href="{% url 'todolist:index' %}" class="btn btn-secondary btn-block" >戻る</a>
             </div>
         </div>
     {% else %}
