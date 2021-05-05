@@ -86,6 +86,7 @@ TEMPLATES = [
             'libraries': {
                 'markdown_extras': 'custom_templatetags.markdown_extras',
                 'pagination': 'custom_templatetags.pagination',
+                'custom_filter': 'custom_templatetags.custom_filter',
             },
         },
     },

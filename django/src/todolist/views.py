@@ -30,9 +30,7 @@ class DoingTasks(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # 結果の集計
-        summary = {'total': self.object_list.count(), 'is_done': self.object_list.filter(is_done=True).count()}
-        context['summary'] = summary
+        context['categories'] = models.TaskCategory.objects.all()
 
         return context
 

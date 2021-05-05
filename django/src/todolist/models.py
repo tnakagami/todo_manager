@@ -6,6 +6,9 @@ from django.core.validators import MinValueValidator
 
 User = get_user_model()
 
+class TaskCategory(models.Model):
+    name = models.CharField(ugettext_lazy('category name'), max_length=64)
+
 class Task(models.Model):
     # user
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -17,6 +20,8 @@ class Task(models.Model):
     is_done = models.BooleanField(ugettext_lazy('doing or done'), default=False)
     # ポイント
     point = models.IntegerField(validators=[MinValueValidator(1)], default=1)
+    # 種別
+    category = models.ForeignKey(TaskCategory, on_delete=models.PROTECT)
     # タスク実施日
     limit_date = models.DateTimeField(ugettext_lazy('limit date'), default=timezone.now)
     # タスク完了日
