@@ -189,6 +189,7 @@ MARKDOWN_EXTENSIONS = [
 
 # define custom user model
 AUTH_USER_MODEL = 'account.User'
+AUTH_PROFILE_MODULE = 'account.UserProfile'
 
 # define login url and logout url
 LOGIN_URL = 'account:login'

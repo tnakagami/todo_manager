@@ -4,7 +4,12 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-from .models import User
+from .models import User, UserProfile
+
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    max_num = 1
+    can_delete = False
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
@@ -34,7 +39,7 @@ class CustomUserAdmin(UserAdmin, ImportExportModelAdmin):
             'fields': ('email', 'password1', 'password2'),
         }),
     )
-
+    inlines = [UserProfileInline]
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
     list_display = ('email', 'screen_name', 'is_staff')

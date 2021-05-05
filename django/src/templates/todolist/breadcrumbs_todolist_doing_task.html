@@ -1,0 +1,7 @@
+{% extends 'todolist/breadcrumbs_todolist.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "デイリーミッション" "todolist:doing_task" %}
+{% endblock %}

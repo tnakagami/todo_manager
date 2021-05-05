@@ -15,10 +15,12 @@ class Task(models.Model):
     text = models.TextField(ugettext_lazy('detail'))
     # タスクの状態
     is_done = models.BooleanField(ugettext_lazy('doing or done'), default=False)
-    # タスク完了時の得点
+    # ポイント
     point = models.IntegerField(validators=[MinValueValidator(1)], default=1)
-    # タスク実施日時
-    target_date = models.DateTimeField(ugettext_lazy('target date'), default=timezone.now)
+    # タスク実施日
+    limit_date = models.DateTimeField(ugettext_lazy('limit date'), default=timezone.now)
+    # タスク完了日
+    complete_date = models.DateTimeField(ugettext_lazy('complete date'), default=timezone.now)
     # 作成日時
     created_at = models.DateTimeField(ugettext_lazy('create time'), default=timezone.now)
     # 更新日時
@@ -28,3 +30,16 @@ class Task(models.Model):
         return self.__unicode__()
     def __unicode__(self):
         return self.title
+
+class PointHistory(models.Model):
+    # user
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # 使用したポイント
+    used_point = models.IntegerField(validators=[MinValueValidator(0)], default=0)
+    # 使用日
+    used_date = models.DateTimeField(ugettext_lazy('used date'), default=timezone.now)
+
+    def __str__(self):
+        return self.__unicode__()
+    def __unicode__(self):
+        return self.used_point
