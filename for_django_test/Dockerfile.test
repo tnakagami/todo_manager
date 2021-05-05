@@ -1,0 +1,21 @@
+FROM custom_django
+
+LABEL maintainer="user"
+LABEL description="build django for test"
+ENV SRC_ROOT_PATH /code
+
+# copy python libraries to root directory
+COPY ./requirements_test.txt /requirements.txt
+
+# Install
+RUN pip install -r /requirements.txt \
+    && mkdir -p ${SRC_ROOT_PATH} \
+    && rm -rf /root/.cache /var/cache/apk/* /tmp/*
+
+# change work directory
+WORKDIR ${SRC_ROOT_PATH}
+COPY ./start.sh /start.sh
+COPY ./execute_tests.sh /execute_tests.sh
+RUN chmod 777 /start.sh /execute_tests.sh
+
+CMD ["/start.sh"]

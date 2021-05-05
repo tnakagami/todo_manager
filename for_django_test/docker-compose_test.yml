@@ -1,0 +1,80 @@
+version: '3.4'
+
+services:
+    test_django:
+        # Build target
+        build:
+            context: .
+            # Dockerfile
+            dockerfile: Dockerfile.test
+        # Image name
+        image: test_django
+        # Container name
+        container_name: test_django
+        restart: always
+        # Setup environment variables
+        environment:
+            DJANGO_SECRET_KEY: abcdefghijklmnopqrstuvwxyz0123456789
+            DJANGO_SUPERUSER_EMAIL: superuser@django.local
+            DJANGO_SUPERUSER_PASSWORD: superuserpassword
+            DJANGO_DEBUG_FLAG: "True"
+            DJANGO_WWW_VHOST: "*"
+            MYSQL_DATABASE: database
+            MYSQL_USER: root
+            MYSQL_PASSWORD: rootpassword
+            MYSQL_CHARSET: utf8mb4
+            MYSQL_COLLATION: utf8mb4_unicode_ci
+            DB_HOST: test_mysql
+        # Relationship config file to container directory
+        volumes:
+            - ../django/src:/code
+            - ./result_test:/result_test
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3"
+        depends_on:
+            - test_mysql
+        networks:
+            - backend_bridge
+
+    # database
+    test_mysql:
+        # Build target
+        build:
+            context: ../mysql
+            # Dockerfile
+            dockerfile: Dockerfile
+        # Image name
+        image: custom_mysql.utf8mb4_jp
+        # Container name
+        container_name: test_mysql
+        restart: always
+        # Setup environment variables
+        environment:
+            MYSQL_ROOT_PASSWORD: rootpassword
+            MYSQL_DATABASE: database
+            MYSQL_CHARSET: utf8mb4
+            MYSQL_COLLATION: utf8mb4_unicode_ci
+        # Relationship config file to container directory
+        volumes:
+            - test_database:/var/lib/mysql
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3"
+        # Setup port
+        expose:
+            - "3306"
+        networks:
+            - backend_bridge
+
+# Setup network
+networks:
+    backend_bridge:
+        name: backend_network
+
+volumes:
+    test_database:
