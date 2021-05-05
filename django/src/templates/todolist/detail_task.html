@@ -13,11 +13,6 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <time datetime="{{ task.updated_at|date:'Y-m-d' }}">{{ task.updated_at|naturaltime }}に更新</time>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
                         {{ task.text | markdown2html }}
                     </div>
                 </div>

@@ -50,6 +50,12 @@ class History(LoginRequiredMixin, ListView):
 
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total'] = self.get_queryset().count()
+
+        return context
+
 class DetailTask(AccessMixin, DetailView):
     raise_exception = True
     model = models.Task
@@ -136,3 +142,28 @@ class CreateTask(StaffUserMixin, CreateView):
     form_class = forms.CreateTask
     template_name = 'todolist/create_task.html'
     success_url = reverse_lazy('todolist:index')
+
+class EachUserTaskPage(StaffUserMixin, ListView):
+    raise_exception = True
+    model = models.Task
+    template_name = 'todolist/each_user_tasks.html'
+    paginate_by = 100
+    context_object_name = 'tasks'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = forms.UserSearchForm(self.request.GET or None)
+ 
+        # check form
+        if form.is_valid():
+            queryset = form.filtered_queryset(queryset)
+        # ordering
+        queryset = queryset.order_by('-pk')
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = forms.UserSearchForm(self.request.GET or None)
+
+        return context

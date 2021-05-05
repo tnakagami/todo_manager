@@ -5,14 +5,14 @@
     <div class="col-12">
         <div class="row">
             <div class="col-12">
-                <h3 class="h3 mt-1">ポイント履歴（合計：{{ tasks.count }}件）</h3>
+                <h3 class="h3 mt-1">ポイント履歴（合計：{{ total }}件）</h3>
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th scope="col">タスク内容</th>
                             <th>ポイント</th>
                             <th>期日</th>
-                            <th>達成状況</th>
+                            <th>達成日</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,11 +28,7 @@
                                 {{ task.limit_date|date:'Y-m-d' }}
                             </td>
                             <td>
-                            {% if task.is_done %}
-                                達成（{{ task.complete_date|date:'Y-m-d' }}）
-                            {% else %}
-                                <font color="red">未達成</font>
-                            {% endif %}
+                                {{ task.complete_date|date:'Y-m-d' }}
                             </td>
                         </tr>
                         {% endfor %}

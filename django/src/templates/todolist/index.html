@@ -44,6 +44,14 @@
                         </a>
                     </td>
                 </tr>
+                <tr>
+                    <td scope="row">ユーザごとのタスク確認</td>
+                    <td>
+                        <a href="{% url 'todolist:each_user_tasks' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
                 {% endif %}
             </tbody>
         </table>

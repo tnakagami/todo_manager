@@ -53,7 +53,29 @@ class CreateTask(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields['user'].queryset = User.objects.filter(is_staff=False)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+
+class UserSearchForm(forms.Form):
+    user = forms.ModelChoiceField(
+        label=ugettext_lazy('target user'),
+        required=False,
+        queryset=User.objects.all(),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['user'].queryset = User.objects.filter(is_staff=False)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+    def filtered_queryset(self, queryset):
+        # get user
+        user = self.cleaned_data.get('user')
+
+        if user:
+            queryset = queryset.filter(user=user)
+
+        return queryset
+
