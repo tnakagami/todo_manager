@@ -89,4 +89,3 @@ class UserSearchForm(forms.Form):
                 queryset = queryset.filter(Q(email__icontains=word) | Q(screen_name__icontains=word))
 
         return queryset
-

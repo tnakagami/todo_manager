@@ -20,7 +20,32 @@ class LoginForm(AuthenticationForm):
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['placeholder'] = field.label
 
-class CreateUserForm(UserCreationForm):
+class UserSearchForm(forms.Form):
+    search_word = forms.CharField(
+        label=ugettext_lazy('keyword'),
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': ugettext_lazy('keyword (target: email, screen name)'),
+            'class': 'form-control',
+        }),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+    def filtered_queryset(self, queryset):
+        # get search_word
+        search_word = self.cleaned_data.get('search_word')
+
+        if search_word:
+            for word in search_word.split():
+                queryset = queryset.filter(Q(email__icontains=word) | Q(screen_name__icontains=word))
+
+        return queryset
+
+class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'password1', 'password2', 'screen_name', 'is_staff')
