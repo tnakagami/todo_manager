@@ -1,7 +1,0 @@
-{% extends 'todolist/breadcrumbs_todolist.html' %}
-{% load django_bootstrap_breadcrumbs %}
-
-{% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "獲得ポイント履歴" "todolist:earned_point_history" %}
-{% endblock %}

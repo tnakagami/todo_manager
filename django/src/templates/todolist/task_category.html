@@ -1,0 +1,44 @@
+{% extends 'todolist/breadcrumbs_todolist.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "タスクカテゴリの作成・編集" "todolist:task_category" %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12">
+    {% if user.is_staff %}
+        <div class="row">
+            <div class="col-8">
+                <h3 class="h3 mt-1">タスクカテゴリ一覧</h3>
+            </div>
+            <div class="col-4">
+                <a href="{% url 'todolist:create_task_category' %}" class="btn btn-primary btn-block">タスクカテゴリの作成</a>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">タスクカテゴリ</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    <td>
+                        <a href="{% url 'todolist:update_task_category' category.pk %}" class="btn btn-success btn-block">編集</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        ページを表示する権限がありません。
+    {% endif %}
+    </div>
+</div>
+{% endblock %}

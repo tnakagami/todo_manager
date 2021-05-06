@@ -1,6 +1,12 @@
-{% extends 'todolist/breadcrumbs_todolist_each_user.html' %}
+{% extends 'todolist/breadcrumbs_todolist.html' %}
 {% load markdown_extras %}
 {% load custom_filter %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "ユーザ毎の進捗状況" "todolist:each_user" %}
+{% endblock %}
 
 {% block content %}
 {% if user.is_staff %}
@@ -28,7 +34,7 @@
 </div>
 <div class="row justify-content-center">
     <div class="col-12">
-        <h3 class="h3 mt-1">ユーザごとの進捗状況一覧</h3>
+        <h3 class="h3 mt-1">ユーザ毎の進捗状況一覧</h3>
         <table class="table table-striped">
             <thead>
                 <tr>

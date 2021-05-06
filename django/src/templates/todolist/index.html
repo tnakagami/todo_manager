@@ -13,9 +13,9 @@
             <tbody>
                 {% if user.is_staff %}
                 <tr>
-                    <td scope="row">タスクカテゴリの作成</td>
+                    <td scope="row">タスクカテゴリの作成・編集</td>
                     <td>
-                        <a href="{% url 'todolist:create_task_category' %}" class="btn btn-outline-primary btn-block" target="_self">
+                        <a href="{% url 'todolist:task_category' %}" class="btn btn-outline-primary btn-block" target="_self">
                             Let's go!
                         </a>
                     </td>
@@ -29,7 +29,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td scope="row">ユーザごとのタスク確認</td>
+                    <td scope="row">ユーザごとの進捗状況確認</td>
                     <td>
                         <a href="{% url 'todolist:each_user' %}" class="btn btn-outline-primary btn-block" target="_self">
                             Let's go!

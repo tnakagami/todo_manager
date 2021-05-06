@@ -1,7 +1,0 @@
-{% extends 'todolist/breadcrumbs_todolist.html' %}
-{% load django_bootstrap_breadcrumbs %}
-
-{% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "ユーザ毎の進捗状況" "todolist:each_user" %}
-{% endblock %}

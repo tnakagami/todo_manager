@@ -1,6 +1,11 @@
-{% extends 'todolist/breadcrumbs_todolist_doing_task.html' %}
+{% extends 'todolist/breadcrumbs_todolist.html' %}
 {% load django_bootstrap_breadcrumbs %}
 {% load custom_filter %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "挑戦中のタスク" "todolist:doing_task" %}
+{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">

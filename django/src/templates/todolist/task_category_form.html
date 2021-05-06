@@ -1,4 +1,4 @@
-{% extends 'todolist/breadcrumbs_todolist.html' %}
+{% extends 'todolist/task_category.html' %}
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
@@ -23,7 +23,7 @@
                 <button type="submit" class="btn btn-primary btn-block" form="user-form">送信</button>
             </div>
             <div class="col-6">
-                <a href="{% url 'todolist:index' %}" class="btn btn-secondary btn-block" >戻る</a>
+                <a href="{% url 'todolist:task_category' %}" class="btn btn-secondary btn-block" >戻る</a>
             </div>
         </div>
     {% else %}

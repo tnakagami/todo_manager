@@ -1,9 +1,9 @@
-{% extends 'todolist/breadcrumbs_todolist.html' %}
+{% extends 'todolist/detail_user_tasks.html' %}
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "タスクフォーム" "todolist:create_task" %}
+    {% breadcrumb "タスクの更新" "todolist:update_task" object.pk %}
 {% endblock %}
 
 {% block header %}
