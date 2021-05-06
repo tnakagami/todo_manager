@@ -3,7 +3,7 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "ユーザ情報の更新" "account:update_user" %}
+    {% breadcrumb target_user.email "account:update_user_profile" target_user.pk %}
 {% endblock %}
 
 {% block header %}
