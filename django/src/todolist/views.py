@@ -31,7 +31,7 @@ class DoingTasks(LoginRequiredMixin, ListView):
     context_object_name = 'tasks'
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(user=self.request.user)
+        queryset = super().get_queryset().filter(user=self.request.user, complete_date__lte=date.today())
         queryset = queryset.order_by('-pk')
 
         return queryset
@@ -58,7 +58,7 @@ class EarnedPointsHistory(LoginRequiredMixin, ListView):
     context_object_name = 'tasks'
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(user=self.request.user, complete_date__gte=date.today(), is_done=True)
+        queryset = super().get_queryset().filter(user=self.request.user, is_done=True)
         queryset = queryset.order_by('-complete_date')
 
         return queryset
