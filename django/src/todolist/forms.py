@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy
+from django.db.models import Q
 from . import models
 
 User = get_user_model()
@@ -10,7 +11,7 @@ class UpdateTaskStatus(forms.ModelForm):
         model = models.Task
         fields = ('is_done', )
 
-class CreateTaskCategory(forms.ModelForm):
+class TaskCategoryForm(forms.ModelForm):
     class Meta:
         model = models.TaskCategory
         fields = ('name', )
@@ -21,10 +22,10 @@ class CreateTaskCategory(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
-class CreateTask(forms.ModelForm):
+class TaskForm(forms.ModelForm):
     class Meta:
         model = models.Task
-        fields = ('user', 'title', 'text', 'point', 'category', 'limit_date')
+        fields = ('user', 'title', 'text', 'is_done', 'point', 'category', 'limit_date')
         widgets = {
             'user': forms.Select(attrs={
                     'class': 'form-control',
@@ -36,6 +37,13 @@ class CreateTask(forms.ModelForm):
                 'placeholder': ugettext_lazy('Markdown support\n\n## Introduction\nThis is sample text.'),
                 'rows': 20, 'cols': 10, 'style': 'resize:none;',
                 'class': 'form-control',
+            }),
+            'is_done': forms.CheckboxInput(attrs={
+                'data-toggle': 'toggle',
+                'data-onstyle': 'secondary',
+                'data-offstyle': 'primary',
+                'data-on': ugettext_lazy('finished'),
+                'data-off': ugettext_lazy('doing'),
             }),
             'point': forms.NumberInput(attrs={
                 'class': 'form-control',
@@ -58,24 +66,26 @@ class CreateTask(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
 
 class UserSearchForm(forms.Form):
-    user = forms.ModelChoiceField(
-        label=ugettext_lazy('target user'),
+    search_word = forms.CharField(
+        label=ugettext_lazy('keyword'),
         required=False,
-        queryset=User.objects.all(),
+        widget=forms.TextInput(attrs={
+            'placeholder': ugettext_lazy('keyword (target: email, screen name)'),
+            'class': 'form-control',
+        }),
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['user'].queryset = User.objects.filter(is_staff=False)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
     def filtered_queryset(self, queryset):
-        # get user
-        user = self.cleaned_data.get('user')
+        # get search_word
+        search_word = self.cleaned_data.get('search_word')
 
-        if user:
-            queryset = queryset.filter(user=user)
+        if search_word:
+            for word in search_word.split():
+                queryset = queryset.filter(Q(email__icontains=word) | Q(screen_name__icontains=word))
 
         return queryset
-

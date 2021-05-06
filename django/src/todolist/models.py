@@ -24,7 +24,7 @@ class Task(models.Model):
     # タスクの状態
     is_done = models.BooleanField(ugettext_lazy('doing or done'), default=False)
     # ポイント
-    point = models.IntegerField(validators=[MinValueValidator(1)], default=1)
+    point = models.IntegerField(ugettext_lazy('point'), validators=[MinValueValidator(1)], default=1)
     # 種別
     category = models.ForeignKey(TaskCategory, verbose_name=ugettext_lazy('category'), on_delete=models.PROTECT)
     # タスク実施日

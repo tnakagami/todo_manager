@@ -11,7 +11,7 @@ class LoginForm(AuthenticationForm):
     Login form
     """
     # AuthenticationFormの内容に合わせ、username変数にログイン用のE-mailアドレスを設定する
-    username = forms.CharField(label=ugettext_lazy('e-mail address'))
+    username = forms.CharField(label=ugettext_lazy('email address'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,15 +20,42 @@ class LoginForm(AuthenticationForm):
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['placeholder'] = field.label
 
-class CreateUserForm(UserCreationForm):
+class UserSearchForm(forms.Form):
+    search_word = forms.CharField(
+        label=ugettext_lazy('keyword'),
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': ugettext_lazy('keyword (target: email, screen name)'),
+            'class': 'form-control',
+        }),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+    def filtered_queryset(self, queryset):
+        # get search_word
+        search_word = self.cleaned_data.get('search_word')
+
+        if search_word:
+            for word in search_word.split():
+                queryset = queryset.filter(Q(email__icontains=word) | Q(screen_name__icontains=word))
+
+        return queryset
+
+class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'password1', 'password2', 'screen_name', 'is_staff')
         widgets = {
             'is_staff': forms.CheckboxInput(attrs={
                 'data-toggle': 'toggle',
-                'data-onstyle': 'primary',
-                'data-offstyle': 'danger',
+                'data-onstyle': 'danger',
+                'data-offstyle': 'primary',
+                'data-width': '200',
+                'data-height': '40',
                 'data-on': ugettext_lazy('staff user'),
                 'data-off': ugettext_lazy('normal user'),
             }),

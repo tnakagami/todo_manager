@@ -1,9 +1,13 @@
-{% extends 'todolist/breadcrumbs_todolist.html' %}
+{% extends 'account/registered_user.html' %}
 {% load django_bootstrap_breadcrumbs %}
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "タスクカテゴリの作成" "todolist:create_task_category" %}
+    {% breadcrumb "ユーザ情報の更新" "account:update_user" %}
+{% endblock %}
+
+{% block header %}
+    {{ block.super }}
 {% endblock %}
 
 {% block content %}
@@ -23,7 +27,7 @@
                 <button type="submit" class="btn btn-primary btn-block" form="user-form">送信</button>
             </div>
             <div class="col-6">
-                <a href="{% url 'todolist:index' %}" class="btn btn-secondary btn-block" >戻る</a>
+                <a href="{% url 'account:registered_user' %}" class="btn btn-secondary btn-block" >戻る</a>
             </div>
         </div>
     {% else %}
@@ -31,4 +35,8 @@
     {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block bodyjs %}
+    {{ block.super }}
 {% endblock %}

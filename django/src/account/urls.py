@@ -11,6 +11,10 @@ urlpatterns = [
     path('logout/', views.LogoutPage.as_view(), name='logout'),
     # user profile
     path('profile/', views.UserProfilePage.as_view(), name='user_profile'),
+    # user list
+    path('user/list', views.RegisteredUserPage.as_view(), name='registered_user'),
     # create user
-    path('create_user/', views.CreateUserPage.as_view(), name='create_user'),
+    path('user/create', views.CreateUserPage.as_view(), name='create_user'),
+    # update user profile
+    path('user/update/<int:pk>', views.UpdateUserProfilePage.as_view(), name='update_user_profile'),
 ]

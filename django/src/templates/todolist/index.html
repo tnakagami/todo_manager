@@ -11,27 +11,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td scope="row">挑戦中のタスク</td>
-                    <td>
-                        <a href="{% url 'todolist:doing_task' %}" class="btn btn-outline-primary btn-block" target="_self">
-                            Let's go!
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td scope="row">ポイント履歴</td>
-                    <td>
-                        <a href="{% url 'todolist:history' %}" class="btn btn-outline-primary btn-block" target="_self">
-                            Let's go!
-                        </a>
-                    </td>
-                </tr>
                 {% if user.is_staff %}
                 <tr>
-                    <td scope="row">タスクカテゴリの作成</td>
+                    <td scope="row">タスクカテゴリの作成・編集</td>
                     <td>
-                        <a href="{% url 'todolist:create_task_category' %}" class="btn btn-outline-primary btn-block" target="_self">
+                        <a href="{% url 'todolist:task_category' %}" class="btn btn-outline-primary btn-block" target="_self">
                             Let's go!
                         </a>
                     </td>
@@ -45,9 +29,34 @@
                     </td>
                 </tr>
                 <tr>
-                    <td scope="row">ユーザごとのタスク確認</td>
+                    <td scope="row">ユーザごとの進捗状況確認</td>
                     <td>
-                        <a href="{% url 'todolist:each_user_tasks' %}" class="btn btn-outline-primary btn-block" target="_self">
+                        <a href="{% url 'todolist:each_user' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td scope="row">挑戦中のタスク</td>
+                    <td>
+                        <a href="{% url 'todolist:doing_task' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">ポイント獲得履歴</td>
+                    <td>
+                        <a href="{% url 'todolist:earned_point_history' %}" class="btn btn-outline-primary btn-block" target="_self">
+                            Let's go!
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">ポイント使用履歴</td>
+                    <td>
+                        <a href="#" class="btn btn-outline-primary btn-block" target="_self">
                             Let's go!
                         </a>
                     </td>

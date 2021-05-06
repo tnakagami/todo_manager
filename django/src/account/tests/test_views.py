@@ -91,3 +91,54 @@ class LogoutPageTests(BaseTestCase):
     def test_logout_page_view(self):
         resolver = resolve('/logout/')
         self.chk_class(resolver, views.LogoutPage)
+
+class UserProfilePageTests(BaseTestCase):
+    @override_settings(AXES_ENABLED=False)
+    def setUp(self):
+        super().setUp()
+        self.client.login(username=self.user.email, password=self.password)
+
+    def test_user_profile_page_access(self):
+        url = reverse('account:user_profile')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('account/user_profile.html')
+
+    def test_user_profile_page_view(self):
+        resolver = resolve('/profile/')
+        self.chk_class(resolver, views.UserProfilePage)
+
+class CreateUserPageTests(BaseTestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.superuser = UserFactory(email='superuser@example.com', password=make_password(cls.password))
+        cls.staffuser = UserFactory(email='staffuser@example.com', password=make_password(cls.password))
+
+    @override_settings(AXES_ENABLED=False)
+    def test_access_for_normaluser(self):
+        self.client.login(username=self.user.email, password=self.password)
+        url = reverse('account:create_user')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 403)
+
+    @override_settings(AXES_ENABLED=False)
+    def test_access_for_staffuser(self):
+        self.client.login(username=self.staffuser.email, password=self.password)
+        url = reverse('account:create_user')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('account/create_user.html')
+        self.assertTrue('user_form' in response.context.keys())
+        self.assertTrue('profile_form' in response.context.keys())
+
+    @override_settings(AXES_ENABLED=False)
+    def test_access_for_superuser(self):
+        self.client.login(username=self.superuser.email, password=self.password)
+        url = reverse('account:create_user')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_user_page_view(self):
+        resolver = resolve('/create_user/')
+        self.chk_class(resolver, views.CreateUserPage)

@@ -1,6 +1,11 @@
-{% extends 'todolist/breadcrumbs_todolist_doing_task.html' %}
+{% extends 'todolist/breadcrumbs_todolist.html' %}
 {% load django_bootstrap_breadcrumbs %}
 {% load custom_filter %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "挑戦中のタスク" "todolist:doing_task" %}
+{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -20,9 +25,7 @@
                 <div class="row">
                     <div class="col-12">
                     {% with tasks|category_filter2list:category.pk as targets %}
-                        {% with targets|is_done_filter2list as is_done_qs %}
-                        <h3 class="h3">{{ category.name }}（達成度：{{ is_done_qs|length }} / {{ targets|length }}）</h3>
-                        {% endwith %}
+                        <h3 class="h3">{{ category.name }}（達成度：{{ completed_count|lookup:category.pk }} / {{ total_count|lookup:category.pk }}）</h3>
                         <table class="table table-striped">
                             <thead>
                                 <tr>

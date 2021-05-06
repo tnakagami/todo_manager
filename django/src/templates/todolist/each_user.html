@@ -1,0 +1,96 @@
+{% extends 'todolist/breadcrumbs_todolist.html' %}
+{% load markdown_extras %}
+{% load custom_filter %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "ユーザごとの進捗状況" "todolist:each_user" %}
+{% endblock %}
+
+{% block content %}
+{% if user.is_staff %}
+<div class="row justify-content-center">
+    <div class="card col-12">
+        <div class="card-body">
+            <h5 class="card-title">絞り込み検索</h5>
+            <form action="", method="GET" id="search-form">
+                <div class="form-row">
+                    <div class="col-12">
+                        {{ search_form.search_word }}
+                    </div>
+                </div>
+            </form>
+            <div class="row mt-1">
+                <div class="col-6">
+                    <button type="submit" class="btn btn-primary btn-block" form="search-form">検索（Ctrl + Enter）</button>
+                </div>
+                <div class="col-6">
+                    <a href="{% url 'todolist:each_user' %}" class="btn btn-secondary btn-block">全件表示</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-12">
+        <h3 class="h3 mt-1">ユーザごとの進捗状況一覧</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">ユーザ</th>
+                    <th>挑戦中のタスク数</th>
+                    <th>達成済のタスク数</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for target_user in users %}
+                <tr>
+                    <td>
+                        <a href="{% url 'todolist:detail_user_tasks' target_user.pk %}">{{ target_user.email }}</a>
+                    </td>
+                    <td>
+                        {{ doing_count|lookup:target_user.pk }}
+                    </td>
+                    <td>
+                        {{ completed_count|lookup:target_user.pk }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if tasks %}
+<div class="row justify-content-center mt-3">
+    <div class="col-12">
+{% include "pagination.html" %}
+    </div>
+</div>
+{% endif %}
+{% else %}
+<div class="row justify-content-center mt-3">
+    <div class="col-12">
+        ページを表示する権限がありません。
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block bodyjs %}
+<script>
+(function() {
+    const selectElement = document.querySelector('#{{ search_form.search_word.auto_id }}');
+    // キーが上がった場合の処理
+    selectElement.onkeyup = (e) => {
+        const enter_key = 13;
+        // CtrlキーとEnterキーが押下されていた場合
+        if (e.ctrlKey && (e.keyCode === enter_key)) {
+            const searchForm = document.getElementById('search-form');
+            searchForm.submit();
+        }
+    };
+}());
+</script>
+{% endblock %}

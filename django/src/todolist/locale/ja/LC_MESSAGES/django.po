@@ -1,0 +1,101 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-05-06 11:59+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: todolist/forms.py:37
+msgid ""
+"Markdown support\n"
+"\n"
+"## Introduction\n"
+"This is sample text."
+msgstr ""
+"Markdownをサポートしています。\n"
+"## 導入\n"
+"これはサンプルテキストです。"
+
+#: todolist/forms.py:45
+msgid "finished"
+msgstr "達成済"
+
+#: todolist/forms.py:46
+msgid "doing"
+msgstr "挑戦中"
+
+#: todolist/forms.py:70
+msgid "keyword"
+msgstr "キーワード"
+
+#: todolist/forms.py:73
+msgid "keyword (target: email, screen name)"
+msgstr "キーワード（対象：Eメールアドレス、表示名）"
+
+#: todolist/models.py:10
+msgid "category name"
+msgstr "タスク種別名"
+
+#: todolist/models.py:19 todolist/models.py:46
+msgid "user"
+msgstr "ユーザ"
+
+#: todolist/models.py:21
+msgid "title"
+msgstr "タイトル"
+
+#: todolist/models.py:23
+msgid "detail"
+msgstr "詳細"
+
+#: todolist/models.py:25
+msgid "doing or done"
+msgstr "挑戦中or達成済"
+
+#: todolist/models.py:27
+msgid "point"
+msgstr "ポイント"
+
+#: todolist/models.py:29
+msgid "category"
+msgstr "タスク種別"
+
+#: todolist/models.py:31
+msgid "limit date"
+msgstr "タスク実施日"
+
+#: todolist/models.py:33
+msgid "complete date"
+msgstr "タスク完了日"
+
+#: todolist/models.py:35
+msgid "create time"
+msgstr "作成日時"
+
+#: todolist/models.py:37
+msgid "update time"
+msgstr "更新日時"
+
+#: todolist/models.py:48
+msgid "used point"
+msgstr "使用済みのポイント"
+
+#: todolist/models.py:50
+msgid "used date"
+msgstr "ポイント使用日"
+
+#~ msgid "target user"
+#~ msgstr "検索対象ユーザ"

@@ -1,11 +1,17 @@
-{% extends 'todolist/breadcrumbs_todolist_task_history.html' %}
+{% extends 'todolist/breadcrumbs_todolist.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "獲得ポイント履歴" "todolist:earned_point_history" %}
+{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-12">
         <div class="row">
             <div class="col-12">
-                <h3 class="h3 mt-1">ポイント履歴（合計：{{ total }}件）</h3>
+                <h3 class="h3 mt-1">ポイント獲得履歴（合計：{{ total }}件）</h3>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -19,7 +25,7 @@
                         {% for task in tasks %}
                         <tr>
                             <td>
-                                <a href="{% url 'todolist:detail_history' task.pk %}">{{ task.title }}</a>
+                                <a href="{% url 'todolist:detail_earned_point' task.pk %}">{{ task.title }}</a>
                             </td>
                             <td>
                                 {{ task.point }}
