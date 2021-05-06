@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, AccessMixin
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.http import Http404, HttpResponseRedirect
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DetailView
 from django.core.paginator import Paginator
@@ -146,15 +146,36 @@ class StaffUserMixin(UserPassesTestMixin):
 
 class CreateTaskCategory(StaffUserMixin, CreateView):
     model = models.TaskCategory
-    form_class = forms.CreateTaskCategory
-    template_name = 'todolist/create_task_category.html'
+    form_class = forms.TaskCategoryForm
+    template_name = 'todolist/task_category_form.html'
     success_url = reverse_lazy('todolist:index')
 
 class CreateTask(StaffUserMixin, CreateView):
     model = models.Task
-    form_class = forms.CreateTask
-    template_name = 'todolist/create_task.html'
+    form_class = forms.TaskForm
+    template_name = 'todolist/task_form.html'
     success_url = reverse_lazy('todolist:index')
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['back_url'] = reverse('todolist:index')
+
+        return context
+
+class UpdateTask(StaffUserMixin, UpdateView):
+    model = models.Task
+    form_class = forms.TaskForm
+    template_name = 'todolist/task_form.html'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['back_url'] = reverse('todolist:detail_user_tasks', kwargs={'pk': self.object.user.pk})
+
+        return context
+
+    def get_success_url(self):
+        user = self.object.user
+        return reverse('todolist:detail_user_tasks', kwargs={'pk': user.pk})
 
 class EachUserPage(StaffUserMixin, ListView):
     raise_exception = True

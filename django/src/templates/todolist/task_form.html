@@ -3,7 +3,7 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "タスクの作成" "todolist:create_task" %}
+    {% breadcrumb "タスクフォーム" "todolist:create_task" %}
 {% endblock %}
 
 {% block header %}
@@ -29,7 +29,7 @@
                 <button type="submit" class="btn btn-primary btn-block" form="user-form">送信</button>
             </div>
             <div class="col-6">
-                <a href="{% url 'todolist:index' %}" class="btn btn-secondary btn-block" >戻る</a>
+                <a href="{{ back_url }}" class="btn btn-secondary btn-block" >戻る</a>
             </div>
         </div>
     {% else %}

@@ -11,7 +11,7 @@ class UpdateTaskStatus(forms.ModelForm):
         model = models.Task
         fields = ('is_done', )
 
-class CreateTaskCategory(forms.ModelForm):
+class TaskCategoryForm(forms.ModelForm):
     class Meta:
         model = models.TaskCategory
         fields = ('name', )
@@ -22,7 +22,7 @@ class CreateTaskCategory(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
-class CreateTask(forms.ModelForm):
+class TaskForm(forms.ModelForm):
     class Meta:
         model = models.Task
         fields = ('user', 'title', 'text', 'point', 'category', 'limit_date')

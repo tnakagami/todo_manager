@@ -21,13 +21,16 @@
                         <div class="col-6">
                             種別：{{ task.category.name }}
                         </div>
-                        <div class="col-6">
+                        <div class="col-3">
                             達成状況：
                             {% if task.is_done %}
                             達成
                             {% else %}
                             <font color="red">未達成</font>
                             {% endif %}
+                        </div>
+                        <div class="col-3">
+                            <a href="{% url 'todolist:update_task' task.pk %}" class="btn btn-success btn-block">編集</a>
                         </div>
                     </div>
                 </div>
