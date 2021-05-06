@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-06 00:35+0900\n"
+"POT-Creation-Date: 2021-05-06 11:59+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,17 +17,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-#: todolist/forms.py:36
+
+#: todolist/forms.py:37
 msgid ""
 "Markdown support\n"
 "\n"
 "## Introduction\n"
 "This is sample text."
-msgstr "Markdownをサポートしています。\n## 導入\nこれはサンプルテキストです。"
+msgstr ""
+"Markdownをサポートしています。\n"
+"## 導入\n"
+"これはサンプルテキストです。"
 
-#: todolist/forms.py:62
-msgid "target user"
-msgstr "検索対象ユーザ"
+#: todolist/forms.py:45
+msgid "finished"
+msgstr "達成済"
+
+#: todolist/forms.py:46
+msgid "doing"
+msgstr "挑戦中"
+
+#: todolist/forms.py:70
+msgid "keyword"
+msgstr "キーワード"
+
+#: todolist/forms.py:73
+msgid "keyword (target: email, screen name)"
+msgstr "キーワード（対象：Eメールアドレス、表示名）"
 
 #: todolist/models.py:10
 msgid "category name"
@@ -48,6 +64,10 @@ msgstr "詳細"
 #: todolist/models.py:25
 msgid "doing or done"
 msgstr "挑戦中or達成済"
+
+#: todolist/models.py:27
+msgid "point"
+msgstr "ポイント"
 
 #: todolist/models.py:29
 msgid "category"
@@ -76,3 +96,6 @@ msgstr "使用済みのポイント"
 #: todolist/models.py:50
 msgid "used date"
 msgstr "ポイント使用日"
+
+#~ msgid "target user"
+#~ msgstr "検索対象ユーザ"

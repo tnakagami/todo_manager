@@ -25,7 +25,7 @@ class TaskCategoryForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = models.Task
-        fields = ('user', 'title', 'text', 'point', 'category', 'limit_date')
+        fields = ('user', 'title', 'text', 'is_done', 'point', 'category', 'limit_date')
         widgets = {
             'user': forms.Select(attrs={
                     'class': 'form-control',
@@ -37,6 +37,13 @@ class TaskForm(forms.ModelForm):
                 'placeholder': ugettext_lazy('Markdown support\n\n## Introduction\nThis is sample text.'),
                 'rows': 20, 'cols': 10, 'style': 'resize:none;',
                 'class': 'form-control',
+            }),
+            'is_done': forms.CheckboxInput(attrs={
+                'data-toggle': 'toggle',
+                'data-onstyle': 'secondary',
+                'data-offstyle': 'primary',
+                'data-on': ugettext_lazy('finished'),
+                'data-off': ugettext_lazy('doing'),
             }),
             'point': forms.NumberInput(attrs={
                 'class': 'form-control',

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-06 00:35+0900\n"
+"POT-Creation-Date: 2021-05-06 11:59+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,15 +30,15 @@ msgstr "権限"
 msgid "Important dates"
 msgstr "最終ログイン日とアカウント作成日"
 
-#: account/forms.py:14
+#: account/forms.py:14 account/models.py:55
 msgid "email address"
 msgstr "Eメールアドレス"
 
-#: account/forms.py:32
+#: account/forms.py:34
 msgid "staff user"
 msgstr "スタッフユーザ"
 
-#: account/forms.py:33
+#: account/forms.py:35
 msgid "normal user"
 msgstr "通常ユーザ"
 
