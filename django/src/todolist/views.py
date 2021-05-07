@@ -31,7 +31,7 @@ class DoingTasks(LoginRequiredMixin, ListView):
     context_object_name = 'tasks'
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(user=self.request.user, complete_date__lte=date.today())
+        queryset = super().get_queryset().filter(user=self.request.user, limit_date__gte=date.today())
         queryset = queryset.order_by('-pk')
 
         return queryset
@@ -108,7 +108,7 @@ class UpdateTaskStatus(AccessMixin, UpdateView):
 
         # 以下のいずれかを満たすときにアクセスを許可
         # ・スーパーユーザもしくはスタッフ権限を持つユーザ
-        # ・認証済みかつ、taskのpkがユーザのpkと等しい
+        # ・認証済みかつ、taskに登録されているユーザのpkが、リクエストしたユーザのpkと等しい
         user = request.user
         allowed_user = user.is_staff or user.is_superuser
         matched_user = user.is_authenticated and user.pk == task.user.pk
@@ -139,6 +139,8 @@ class StaffUserMixin(UserPassesTestMixin):
     raise_exception = True
 
     def test_func(self):
+        # 以下を満たすときにアクセスを許可
+        # ・ユーザがログイン済みであるかつ、スタッフ権限を持つ
         user = self.request.user
         ret = user.is_authenticated and user.is_staff
 

@@ -44,13 +44,16 @@
                 </div>
                 <div class="card-footer">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-4">
                             期日：{{ task.limit_date|date:'Y-m-d' }}
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
                         {% if task.is_done %}
                             達成日：{{ task.complete_date|date:'Y-m-d' }}
                         {% endif %}
+                        </div>
+                        <div class="col-4">
+                            ポイント：{{ task.point }}
                         </div>
                     </div>
                 </div>
