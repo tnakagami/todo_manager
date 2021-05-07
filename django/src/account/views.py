@@ -38,6 +38,8 @@ class StaffUserMixin(UserPassesTestMixin):
     raise_exception = True
 
     def test_func(self):
+        # 以下を満たすときにアクセスを許可
+        # ・ユーザがログイン済みであるかつ、スタッフ権限を持つ
         user = self.request.user
         ret = user.is_authenticated and user.is_staff
 
@@ -119,6 +121,9 @@ class OnlyYouMixin(UserPassesTestMixin):
     raise_exception = True
 
     def test_func(self):
+        # 以下を満たすときにアクセスを許可
+        # ・ユーザがログイン済みである
+        # ・リクエストしたユーザpkがログインユーザと等しいまたは、スタッフ権限を持つ
         user = self.request.user
         ret = user.is_authenticated and (user.pk == self.kwargs['pk'] or user.is_staff)
 
@@ -146,7 +151,7 @@ class SetPasswordPage(OnlyYouMixin, FormView):
         if user.is_staff:
             response = reverse_lazy('account:registered_user')
         else:
-            # login
+            # ログイン処理を行う
             auth_login(self.request, self.user, backend='django.contrib.auth.backends.ModelBackend')
             response = reverse_lazy('account:user_profile')
 
