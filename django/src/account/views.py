@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth import login as auth_login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import TemplateView, ListView, UpdateView, View
+from django.views.generic import TemplateView, ListView, UpdateView, View, FormView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from . import forms
@@ -113,3 +114,46 @@ class UpdateUserProfilePage(StaffUserMixin, UpdateView):
     template_name = 'account/update_user_profile.html'
     context_object_name = 'target_user'
     success_url = reverse_lazy('account:registered_user')
+
+class OnlyYouMixin(UserPassesTestMixin):
+    raise_exception = True
+
+    def test_func(self):
+        user = self.request.user
+        ret = user.is_authenticated and (user.pk == self.kwargs['pk'] or user.is_staff)
+
+        return ret
+
+class SetPasswordPage(OnlyYouMixin, FormView):
+    form_class = forms.CustomSetPasswordForm
+    template_name = 'account/set_password.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        self.user = User.objects.get(pk=self.kwargs['pk'])
+        kwargs['user'] = self.user
+
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        user = self.request.user
+
+        if user.is_staff:
+            response = reverse_lazy('account:registered_user')
+        else:
+            # login
+            auth_login(self.request, self.user, backend='django.contrib.auth.backends.ModelBackend')
+            response = reverse_lazy('account:user_profile')
+
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['target_user'] = self.user
+
+        return context
