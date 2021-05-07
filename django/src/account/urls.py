@@ -17,4 +17,6 @@ urlpatterns = [
     path('user/create', views.CreateUserPage.as_view(), name='create_user'),
     # update user profile
     path('user/update/<int:pk>', views.UpdateUserProfilePage.as_view(), name='update_user_profile'),
+    # set password
+    path('user/set_password/<int:pk>', views.SetPasswordPage.as_view(), name='set_password'),
 ]

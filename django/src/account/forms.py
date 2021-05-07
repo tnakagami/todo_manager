@@ -1,6 +1,7 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, password_validation
 from django.utils.translation import ugettext_lazy
 from . import models
 
@@ -85,3 +86,50 @@ class UserProfileForm(forms.ModelForm):
 
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+
+class CustomSetPasswordForm(forms.Form):
+    error_messages = {
+        'password_mismatch': ugettext_lazy('The two password fields did not match.'),
+    }
+    new_password1 = forms.CharField(
+        label=ugettext_lazy('New password'),
+        widget=forms.PasswordInput(attrs={
+            'autocomplete': 'new-password',
+            'class': 'form-control',
+        }),
+        strip=False,
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+
+    new_password2 = forms.CharField(
+        label=ugettext_lazy('New password confirmation'),
+        strip=False,
+        widget=forms.PasswordInput(attrs={
+            'autocomplete': 'new-password',
+            'class': 'form-control',
+        }),
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_new_password2(self):
+        password1 = self.cleaned_data.get('new_password1')
+        password2 = self.cleaned_data.get('new_password2')
+
+        if password1 and password2:
+            if password1 != password2:
+                raise ValidationError(self.error_messages['password_mismatch'], code='password_mismatch',)
+        password_validation.validate_password(password2, self.user)
+
+        return password2
+
+    def save(self, commit=True):
+        password = self.cleaned_data['new_password1']
+        self.user.set_password(password)
+
+        if commit:
+            self.user.save()
+
+        return self.user
