@@ -101,10 +101,19 @@ class UserProfile(models.Model):
     # 生年月日
     date_of_birth = models.DateTimeField(ugettext_lazy('date of birth'), default=timezone.make_aware(datetime(2000, 1, 1)))
 
-    def update(self, profile):
+    def __str__(self):
+        return self.__unicode__()
+    def __unicode__(self):
+        return 'profile: {}'.format(self.user.email)
+
+    def set_profile(self, profile):
         self.score = profile.score
         self.achievements = profile.achievements
         self.date_of_birth = profile.date_of_birth
+
+    def update(self, point):
+        self.score += point
+        self.achievements += 1
 
 @receiver(post_save, sender=User)
 def create_profile(sender, **kwargs):

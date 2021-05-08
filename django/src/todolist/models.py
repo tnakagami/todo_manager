@@ -41,6 +41,9 @@ class Task(models.Model):
     def __unicode__(self):
         return self.title
 
+    def update_complete_date(self):
+        self.complete_date = timezone.now()
+
 class PointHistory(models.Model):
     # user
     user = models.ForeignKey(User, verbose_name=ugettext_lazy('user'), on_delete=models.CASCADE)
