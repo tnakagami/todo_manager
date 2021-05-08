@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-06 11:59+0900\n"
+"POT-Creation-Date: 2021-05-08 15:06+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,17 +30,37 @@ msgstr "権限"
 msgid "Important dates"
 msgstr "最終ログイン日とアカウント作成日"
 
-#: account/forms.py:14 account/models.py:55
+#: account/forms.py:15 account/models.py:55
 msgid "email address"
 msgstr "Eメールアドレス"
 
-#: account/forms.py:34
+#: account/forms.py:26
+msgid "keyword"
+msgstr "キーワード"
+
+#: account/forms.py:29
+msgid "keyword (target: email, screen name)"
+msgstr "キーワード（対象：Eメールアドレス、表示名）"
+
+#: account/forms.py:60
 msgid "staff user"
 msgstr "スタッフユーザ"
 
-#: account/forms.py:35
+#: account/forms.py:61
 msgid "normal user"
 msgstr "通常ユーザ"
+
+#: account/forms.py:92
+msgid "The two password fields did not match."
+msgstr "入力されたパスワードが一致しません。"
+
+#: account/forms.py:95
+msgid "New password"
+msgstr ""
+
+#: account/forms.py:105
+msgid "New password confirmation"
+msgstr ""
 
 #: account/models.py:50
 msgid "screen name"

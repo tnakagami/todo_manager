@@ -108,9 +108,11 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
-AXES_CACHE = 'axes'
-AXES_FAILURE_LIMIT = 11 # failed login counter
-AXES_COOLOFF_TIME = 12  # account lock time
+AXES_CACHE = 'axes_cache'
+AXES_FAILURE_LIMIT = 11        # failed login counter
+AXES_COOLOFF_TIME = 12         # account lock time
+AXES_ONLY_USER_FAILURES = True # lock for each user
+AXES_RESET_ON_SUCCESS = True   # reset failed counter
 AXES_META_PRECEDENCE_ORDER = (
     'HTTP_X_FORWARDED_FOR',
     'REMOTE_ADDR',

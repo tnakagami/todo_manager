@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import TemplateView, ListView, UpdateView, View, FormView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from . import forms
+from . import forms, models
 
 User = get_user_model()
 
@@ -98,7 +98,7 @@ class CreateUserPage(StaffUserMixin, View):
             user.save()
             # Profileモデルの処理。Userモデルと紐づける
             profile = profile_form.save(commit=False)
-            user.profile.update(profile)
+            user.profile.set_profile(profile)
             user.profile.save()
             response = redirect('account:registered_user')
         else:
@@ -111,7 +111,7 @@ class CreateUserPage(StaffUserMixin, View):
         return response
 
 class UpdateUserProfilePage(StaffUserMixin, UpdateView):
-    model = User
+    model = models.UserProfile
     form_class = forms.UserProfileForm
     template_name = 'account/update_user_profile.html'
     context_object_name = 'target_user'

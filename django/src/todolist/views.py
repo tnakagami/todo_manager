@@ -125,10 +125,9 @@ class UpdateTaskStatus(AccessMixin, UpdateView):
 
         if task.is_done:
             # 完了時に完了日を更新
-            task.complete_date = timezone.now()
+            task.update_complete_date()
             # ポイントを加算
-            self.request.user.profile.score += task.point
-            self.request.user.profile.achievements += 1
+            self.request.user.profile.update(task.point)
             self.request.user.profile.save()
 
         task.save()
@@ -210,8 +209,8 @@ class EachUserPage(StaffUserMixin, ListView):
         tasks = models.Task.objects.all()
         user_pks = self.get_queryset().values_list('pk', flat=True)
         context['search_form'] = forms.UserSearchForm(self.request.GET or None)
-        context['completed_count'] = {pk: tasks.filter(user=pk, is_done=True).count() for pk in user_pks}
-        context['doing_count'] = {pk: tasks.filter(user=pk, is_done=False).count() for pk in user_pks}
+        context['completed_count'] = {pk: tasks.filter(user__pk=pk, is_done=True).count() for pk in user_pks}
+        context['doing_count'] = {pk: tasks.filter(user__pk=pk, is_done=False).count() for pk in user_pks}
 
         return context
 
