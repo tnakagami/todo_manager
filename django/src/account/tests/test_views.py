@@ -100,7 +100,7 @@ class UserProfilePageTests(BaseTestCase):
 
     def test_user_profile_page_access(self):
         url = reverse('account:user_profile')
-        response = self.client.post(url)
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('account/user_profile.html')
 
@@ -112,21 +112,21 @@ class CreateUserPageTests(BaseTestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        cls.superuser = UserFactory(email='superuser@example.com', password=make_password(cls.password))
-        cls.staffuser = UserFactory(email='staffuser@example.com', password=make_password(cls.password))
+        cls.superuser = UserFactory(email='superuser@example.com', password=make_password(cls.password), is_staff=True, is_superuser=True)
+        cls.staffuser = UserFactory(email='staffuser@example.com', password=make_password(cls.password), is_staff=True)
 
     @override_settings(AXES_ENABLED=False)
     def test_access_for_normaluser(self):
         self.client.login(username=self.user.email, password=self.password)
         url = reverse('account:create_user')
-        response = self.client.post(url)
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
 
     @override_settings(AXES_ENABLED=False)
     def test_access_for_staffuser(self):
         self.client.login(username=self.staffuser.email, password=self.password)
         url = reverse('account:create_user')
-        response = self.client.post(url)
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('account/create_user.html')
         self.assertTrue('user_form' in response.context.keys())
@@ -136,9 +136,9 @@ class CreateUserPageTests(BaseTestCase):
     def test_access_for_superuser(self):
         self.client.login(username=self.superuser.email, password=self.password)
         url = reverse('account:create_user')
-        response = self.client.post(url)
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_create_user_page_view(self):
-        resolver = resolve('/create_user/')
+        resolver = resolve('/user/create')
         self.chk_class(resolver, views.CreateUserPage)

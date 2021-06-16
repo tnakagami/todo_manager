@@ -15,52 +15,53 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">項目</th>
-                            <th>リンク</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if user.is_staff %}
-                        <tr>
-                            <td scope="row">Admin管理サイト</td>
-                            <td>
-                                <a href="/admin" class="btn btn-outline-primary btn-block" target="_self">
-                                    Let's go!
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="row">ユーザ作成・更新</td>
-                            <td>
-                                <a href="{% url 'account:registered_user' %}" class="btn btn-outline-primary btn-block" target="_self">
-                                    Let's go!
-                                </a>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% if not user.is_staff %}
-                        <tr>
-                            <td scope="row">ユーザプロファイル</td>
-                            <td>
-                                <a href="{% url 'account:user_profile' %}" class="btn btn-outline-primary btn-block" target="_self">
-                                    Let's go!
-                                </a>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        <tr>
-                            <td scope="row">ToDoリスト</td>
-                            <td>
-                                <a href="{% url 'todolist:index' %}" class="btn btn-outline-primary btn-block" target="_self">
-                                    Let's go!
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                {% if user.is_staff %}
+                <div class="card-columns">
+                    <div class="card">
+                        <div class="card-header">Admin管理サイト</div>
+                        <div class="card-body">
+                            <a href="/admin" class="btn btn-link btn-block" target="_self">
+                                Admin管理サイト
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">ユーザ作成・更新</div>
+                        <div class="card-body">
+                            <a href="{% url 'account:registered_user' %}" class="btn btn-link btn-block" target="_self">
+                                ユーザ作成・更新
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">ToDoリスト</div>
+                        <div class="card-body">
+                            <a href="{% url 'todolist:index' %}" class="btn btn-link btn-block" target="_self">
+                                ToDoリスト
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="card-columns">
+                    <div class="card">
+                        <div class="card-header">ユーザプロファイル</div>
+                        <div class="card-body">
+                            <a href="{% url 'account:user_profile' %}" class="btn btn-link btn-block" target="_self">
+                                ユーザプロファイル
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">ToDoリスト</div>
+                        <div class="card-body">
+                            <a href="{% url 'todolist:index' %}" class="btn btn-link btn-block" target="_self">
+                                ToDoリスト
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
